@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Check, Info, X, User, ShoppingBag, ChevronRight, ChevronDown, Plus, Minus } from 'lucide-react';
+import { X, ShoppingBag, ChevronRight, ChevronDown, Plus, Minus } from 'lucide-react';
 
 interface MenuOption {
   label: string;
@@ -44,7 +44,7 @@ const PatientMenu = () => {
 
   const fetchMenu = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/menu');
+      const response = await axios.get('/api/menu');
       setMenuItems(response.data);
       if (response.data.length > 0) {
         const firstCat = response.data[0].category;
@@ -96,7 +96,7 @@ const PatientMenu = () => {
         const qtyStr = item.quantity > 1 ? ` x ${item.quantity}개` : '';
         return `${item.name} (${item.selectedOption.label})${qtyStr}`;
       });
-      await axios.post('http://localhost:5000/api/request', {
+      await axios.post('/api/request', {
         patientName,
         selectedItems: formattedItems
       });
@@ -145,6 +145,7 @@ const PatientMenu = () => {
   return (
     <div className="flex h-full bg-[#FAF9F6] text-[#2C2C2C] font-sans relative overflow-hidden">
       
+      {/* 1. Category Navigation */}
       <nav className="w-72 bg-white border-r border-[#E9E4E0] flex flex-col p-6 space-y-2 pt-12 flex-shrink-0 shadow-[4px_0_15px_rgba(0,0,0,0.02)] overflow-y-auto">
         {categories.map(category => {
           const subCats = getSubCategories(category);
@@ -202,6 +203,7 @@ const PatientMenu = () => {
         })}
       </nav>
 
+      {/* 2. Menu Grid View */}
       <main className="flex-1 overflow-y-auto p-12 relative pb-40 pr-[440px]">
         {message && (
           <div className="fixed top-24 left-1/2 -translate-x-1/2 bg-[#5D5451] text-white px-10 py-4 rounded-full text-sm font-bold z-50 animate-in fade-in slide-in-from-top-4 shadow-2xl">
@@ -255,6 +257,7 @@ const PatientMenu = () => {
         </div>
       </main>
 
+      {/* 3. Right Side Options Panel */}
       <div className="fixed inset-y-0 right-0 w-[420px] bg-white shadow-[-10px_0_30px_rgba(0,0,0,0.03)] z-[100] border-l border-[#F2EFEB]">
         {selectedForOptions ? (
           <div className="h-full flex flex-col bg-[#FCFBFA] animate-in slide-in-from-right duration-500">
@@ -364,6 +367,7 @@ const PatientMenu = () => {
         )}
       </div>
 
+      {/* 4. Floating Bottom Bar */}
       <div className={`fixed bottom-6 left-8 transition-all duration-1000 z-[200] ${
         selectedItems.length > 0 ? 'translate-y-0 opacity-100' : 'translate-y-20 opacity-0 pointer-events-none'
       }`} style={{ width: 'calc(100% - 460px)' }}>

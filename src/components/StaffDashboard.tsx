@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { RefreshCw, Check, Clock, User, ClipboardList } from 'lucide-react';
 
@@ -22,7 +22,7 @@ const StaffDashboard = () => {
 
   const fetchRequests = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/requests');
+      const response = await axios.get('/api/requests');
       setRequests(response.data.reverse());
       setLoading(false);
     } catch (error) {
@@ -33,7 +33,7 @@ const StaffDashboard = () => {
 
   const updateStatus = async (id: number, status: string) => {
     try {
-      await axios.patch(`http://localhost:5000/api/requests/${id}`, { status });
+      await axios.patch(`/api/requests/${id}`, { status });
       fetchRequests();
     } catch (error) {
       console.error('Error updating status:', error);
@@ -42,7 +42,7 @@ const StaffDashboard = () => {
 
   if (loading) return (
     <div className="flex items-center justify-center h-screen bg-gray-50">
-      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#A89486]"></div>
     </div>
   );
 
@@ -79,7 +79,7 @@ const StaffDashboard = () => {
               <div className="flex-1 space-y-6">
                 <div className="flex items-center space-x-4">
                   <div className={`w-12 h-12 rounded-2xl flex items-center justify-center ${
-                    req.status === '대기 중' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-400'
+                    req.status === '대기 중' ? 'bg-[#A89486] text-white' : 'bg-gray-100 text-gray-400'
                   }`}>
                     <User size={24} />
                   </div>
@@ -98,7 +98,7 @@ const StaffDashboard = () => {
                 
                 <div className="flex flex-wrap gap-2 pl-16">
                   {req.selectedItems.map((item, idx) => (
-                    <span key={idx} className="bg-blue-50/50 text-blue-700 px-4 py-2 rounded-xl text-sm font-bold border border-blue-100/50">
+                    <span key={idx} className="bg-[#F8F5F2] text-[#A89486] px-4 py-2 rounded-xl text-sm font-bold border border-[#F2EFEB]">
                       {item}
                     </span>
                   ))}
@@ -109,7 +109,7 @@ const StaffDashboard = () => {
                 {req.status === '대기 중' ? (
                   <button 
                     onClick={() => updateStatus(req.id, '상담 완료')}
-                    className="w-full md:w-auto bg-gray-900 text-white px-8 py-4 rounded-[1.5rem] font-bold hover:bg-blue-600 transition-all flex items-center justify-center space-x-3 shadow-xl active:scale-95"
+                    className="w-full md:w-auto bg-[#2C2C2C] text-white px-8 py-4 rounded-[1.5rem] font-bold hover:bg-[#A89486] transition-all flex items-center justify-center space-x-3 shadow-xl active:scale-95"
                   >
                     <Check size={20} />
                     <span>상담 완료 처리</span>
@@ -117,7 +117,7 @@ const StaffDashboard = () => {
                 ) : (
                   <button 
                     onClick={() => updateStatus(req.id, '대기 중')}
-                    className="w-full md:w-auto bg-gray-100 text-gray-500 px-8 py-4 rounded-[1.5rem] font-bold hover:bg-white hover:border-gray-200 border border-transparent transition-all flex items-center justify-center space-x-3"
+                    className="w-full md:w-auto bg-gray-100 text-gray-600 px-8 py-4 rounded-[1.5rem] font-bold hover:bg-white hover:border-gray-200 border border-transparent transition-all flex items-center justify-center space-x-3"
                   >
                     <Clock size={20} />
                     <span>다시 대기로 변경</span>
