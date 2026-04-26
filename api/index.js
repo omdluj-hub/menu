@@ -17,7 +17,7 @@ const menuData = [
     price: '50,000',
     description: '패인 흉터를 차오르게 하는 후한의원만의 독자적인 흉터 복원 시술입니다.',
     duration: '60분~',
-    image: '/images/menu_3.png',
+    image: '/images/menu_1001.png',
     options: [
       { label: '1개 (부분)', price: '50,000' },
       { label: '면적당 시술', price: '200,000~' }
@@ -31,7 +31,7 @@ const menuData = [
     price: '171,000',
     description: '등이나 가슴 부위의 여드름과 자국을 동시에 해결하는 집중 패키지입니다. (5세트 결제 시 1회 가격)',
     duration: '60분',
-    image: '/images/menu_2.png',
+    image: '/images/menu_1002.png',
     options: [
       { label: '등여드름 (상부) 1회', price: '171,000' },
       { label: '가슴여드름 (전체) 1회', price: '171,000' }
