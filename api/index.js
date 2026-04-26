@@ -3,11 +3,11 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 
 const app = express();
-const PORT = 5000;
 
 app.use(cors());
 app.use(bodyParser.json());
 
+// 메뉴 데이터 (이전과 동일)
 const menuData = [
   // 1. 이달의 이벤트 - 피부
   {
@@ -353,10 +353,12 @@ const menuData = [
   }
 ];
 
+// 요청 저장을 위한 메모리 변수 (Vercel 무료 버전에서는 재시작 시 초기화됨)
 let requests = [];
 
+// 라우트 설정
 app.get('/api/menu', (req, res) => {
-  res.json(menuData);
+  res.status(200).json(menuData);
 });
 
 app.post('/api/request', (req, res) => {
@@ -373,7 +375,7 @@ app.post('/api/request', (req, res) => {
 });
 
 app.get('/api/requests', (req, res) => {
-  res.json(requests);
+  res.status(200).json(requests);
 });
 
 app.patch('/api/requests/:id', (req, res) => {
@@ -382,12 +384,11 @@ app.patch('/api/requests/:id', (req, res) => {
   const request = requests.find(r => r.id === parseInt(id));
   if (request) {
     request.status = status;
-    res.json(request);
+    res.status(200).json(request);
   } else {
     res.status(404).json({ message: '요청을 찾을 수 없습니다.' });
   }
 });
 
-app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
-});
+// Vercel용 익스포트
+module.exports = app;
