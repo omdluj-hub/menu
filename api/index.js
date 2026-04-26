@@ -7,7 +7,6 @@ const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 
-// 메뉴 데이터 (이전과 동일)
 const menuData = [
   // 1. 이달의 이벤트 - 피부
   {
@@ -353,15 +352,16 @@ const menuData = [
   }
 ];
 
-// 요청 저장을 위한 메모리 변수 (Vercel 무료 버전에서는 재시작 시 초기화됨)
 let requests = [];
 
-// 라우트 설정
-app.get('/api/menu', (req, res) => {
+// 유연한 라우팅 처리 ( /api/menu 와 /menu 모두 대응 )
+const router = express.Router();
+
+router.get('/menu', (req, res) => {
   res.status(200).json(menuData);
 });
 
-app.post('/api/request', (req, res) => {
+router.post('/request', (req, res) => {
   const { patientName, selectedItems } = req.body;
   const newRequest = {
     id: Date.now(),
@@ -374,11 +374,11 @@ app.post('/api/request', (req, res) => {
   res.status(201).json({ message: '상담 요청이 완료되었습니다.', request: newRequest });
 });
 
-app.get('/api/requests', (req, res) => {
+router.get('/requests', (req, res) => {
   res.status(200).json(requests);
 });
 
-app.patch('/api/requests/:id', (req, res) => {
+router.patch('/requests/:id', (req, res) => {
   const { id } = req.params;
   const { status } = req.body;
   const request = requests.find(r => r.id === parseInt(id));
@@ -390,5 +390,8 @@ app.patch('/api/requests/:id', (req, res) => {
   }
 });
 
-// Vercel용 익스포트
+// 모든 경로를 라우터로 연결 (Vercel rewrites와 결합하여 /api/menu, /api/request 등을 처리)
+app.use('/api', router);
+app.use('/', router); // fallback
+
 module.exports = app;
