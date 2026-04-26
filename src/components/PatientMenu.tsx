@@ -44,7 +44,9 @@ const PatientMenu = () => {
 
   const fetchMenu = async () => {
     try {
+      console.log('Fetching menu from /api/menu...');
       const response = await axios.get('/api/menu');
+      console.log('Menu fetched successfully:', response.data);
       setMenuItems(response.data);
       if (response.data.length > 0) {
         const firstCat = response.data[0].category;
@@ -57,6 +59,7 @@ const PatientMenu = () => {
       }
       setLoading(false);
     } catch (error) {
+      console.error('Error fetching menu:', error);
       setLoading(false);
     }
   };

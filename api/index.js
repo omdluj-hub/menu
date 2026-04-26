@@ -1,6 +1,6 @@
-const express = require('express');
-const cors = require('cors');
-const bodyParser = require('body-parser');
+import express from 'express';
+import cors from 'cors';
+import bodyParser from 'body-parser';
 
 const app = express();
 
@@ -354,7 +354,6 @@ const menuData = [
 
 let requests = [];
 
-// 유연한 라우팅 처리 ( /api/menu 와 /menu 모두 대응 )
 const router = express.Router();
 
 router.get('/menu', (req, res) => {
@@ -390,8 +389,7 @@ router.patch('/requests/:id', (req, res) => {
   }
 });
 
-// 모든 경로를 라우터로 연결 (Vercel rewrites와 결합하여 /api/menu, /api/request 등을 처리)
 app.use('/api', router);
-app.use('/', router); // fallback
+app.use('/', router);
 
-module.exports = app;
+export default app;
