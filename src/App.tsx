@@ -1,9 +1,24 @@
+import { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import PatientMenu from './components/PatientMenu';
 import StaffDashboard from './components/StaffDashboard';
 import MenuAdmin from './components/MenuAdmin';
+import AdminLogin from './components/AdminLogin';
 
 function App() {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  useEffect(() => {
+    const authStatus = sessionStorage.getItem('adminAuthenticated');
+    if (authStatus === 'true') {
+      setIsAuthenticated(true);
+    }
+  }, []);
+
+  const handleLogin = () => {
+    setIsAuthenticated(true);
+  };
+
   return (
     <Router>
       <div className="h-screen bg-[#F8F9FB] font-sans text-gray-900 flex flex-col overflow-hidden">
@@ -23,8 +38,14 @@ function App() {
         <main className="flex-1 overflow-hidden relative">
           <Routes>
             <Route path="/" element={<PatientMenu />} />
-            <Route path="/reservations" element={<div className="h-full overflow-y-auto p-4 md:p-8"><StaffDashboard /></div>} />
-            <Route path="/admin" element={<MenuAdmin />} />
+            <Route 
+              path="/reservations" 
+              element={isAuthenticated ? <div className="h-full overflow-y-auto p-4 md:p-8"><StaffDashboard /></div> : <AdminLogin onLogin={handleLogin} />} 
+            />
+            <Route 
+              path="/admin" 
+              element={isAuthenticated ? <MenuAdmin /> : <AdminLogin onLogin={handleLogin} />} 
+            />
           </Routes>
         </main>
       </div>
