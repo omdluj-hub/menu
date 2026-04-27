@@ -133,6 +133,16 @@ const PatientMenu = () => {
     </div>
   );
 
+  if (fetchError) return (
+    <div className="flex flex-col items-center justify-center h-full bg-[#FAF9F6] p-8 text-center">
+      <div className="bg-red-50 text-red-600 p-6 rounded-3xl border border-red-100 max-w-md">
+        <h2 className="text-lg font-bold mb-2">오류 발생</h2>
+        <p className="text-sm opacity-80">{fetchError}</p>
+        <button onClick={() => window.location.reload()} className="mt-4 px-6 py-2 bg-red-600 text-white rounded-xl text-xs font-bold">다시 시도</button>
+      </div>
+    </div>
+  );
+
   const categories = Array.from(new Set(menuItems.map(item => item.category)));
   const getSubCategories = (category: string) => {
     return Array.from(new Set(menuItems.filter(item => item.category === category && item.subCategory).map(item => item.subCategory))) as string[];
