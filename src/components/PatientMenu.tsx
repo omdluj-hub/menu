@@ -45,6 +45,7 @@ const PatientMenu = () => {
 
   const fetchMenu = async () => {
     try {
+      setFetchError(null);
       const { data, error } = await supabase
         .from('menu_items')
         .select('*')
@@ -62,6 +63,7 @@ const PatientMenu = () => {
       setLoading(false);
     } catch (error) {
       console.error('Error fetching menu:', error);
+      setFetchError('메뉴 데이터를 불러오는 중 오류가 발생했습니다. 환경 변수 설정을 확인해 주세요.');
       setLoading(false);
     }
   };
