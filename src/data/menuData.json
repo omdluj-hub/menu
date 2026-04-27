@@ -557,7 +557,7 @@
     "price": "20,000",
     "description": "국소 부위 염증을 빠르게 가라앉히는 소염 약침",
     "duration": "10분",
-    "image": "/images/안면약침.png",
+    "image": "/images/facial-acupuncture.png",
     "options": [
       {
         "label": "1회",
@@ -677,7 +677,7 @@
     "price": "290,000",
     "description": "넓어진 모공과 피부 요철을 매끄럽게 케어",
     "duration": "4~10주 프로그램",
-    "image": "/images/모공각화증.png",
+    "image": "/images/keratosis.png",
     "options": [
       {
         "label": "코모공 관리 4주 (압출2+시술2)",
@@ -1018,7 +1018,7 @@
     "price": "950,000",
     "description": "염증을 진정시키고 피부 장벽을 복구하는 예민 피부 집중 치료",
     "duration": "6~11주 프로그램",
-    "image": "/images/안면약침.png",
+    "image": "/images/facial-acupuncture.png",
     "options": [
       {
         "label": "6주 프로그램 (한약+진정4+시술2)",
@@ -1099,7 +1099,7 @@
     "price": "390,000",
     "description": "비움탕 3일분 + 미감탕 30일분 + 다이어트 관리 및 상담 4회 포함",
     "duration": "1~3개월",
-    "image": "/images/미감탕2.JPG",
+    "image": "/images/biumtang.jpg",
     "options": [
       {
         "label": "1개월",
@@ -1143,7 +1143,7 @@
     "price": "70,000",
     "description": "맛있고 복용이 간편한 시럽 형태의 다이어트 약입니다.",
     "duration": "2주~1개월",
-    "image": "/images/미감에스.jpg",
+    "image": "/images/migam-s.jpg",
     "options": [
       {
         "label": "2주",
@@ -1251,7 +1251,7 @@
     "price": "190,000",
     "description": "강력한 냉각 에너지로 지방세포를 파괴하는 부분 비만 관리",
     "duration": "3~5회",
-    "image": "/images/facial-acupuncture.png",
+    "image": "/images/coolshaping.png",
     "options": [
       {
         "label": "단독 5회",
@@ -1278,7 +1278,7 @@
     "price": "300,000",
     "description": "개개인의 체질적 약점을 보완하고 몸의 균형을 되찾아주는 맞춤 한약",
     "duration": "1~3개월 프로그램",
-    "image": "/images/미감탕2.JPG",
+    "image": "/images/migamtang.jpg",
     "options": [
       {
         "label": "1개월",
@@ -1301,7 +1301,7 @@
     "price": "490,000",
     "description": "최고급 러시아산 녹용을 사용하여 기력을 보강하고 면역력을 강화하는 프리미엄 보약",
     "duration": "1~3개월 프로그램",
-    "image": "/images/미감탕2.JPG",
+    "image": "/images/migamtang.jpg",
     "options": [
       {
         "label": "1개월 (1일 2회)",
