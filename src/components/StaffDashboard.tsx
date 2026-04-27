@@ -1,131 +1,151 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
-import { RefreshCw, Check, Clock, User, ClipboardList } from 'lucide-react';
+import { supabase } from '../lib/supabase';
+import { Trash2, CheckCircle, Clock, Search } from 'lucide-react';
 
-interface Request {
+interface Reservation {
   id: number;
-  patientName: string;
-  selectedItems: string[];
+  patient_name: string;
+  selected_items: string[];
   status: string;
   timestamp: string;
 }
 
 const StaffDashboard = () => {
-  const [requests, setRequests] = useState<Request[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [requests, setRequests] = useState<Reservation[]>([]);
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     fetchRequests();
-    const interval = setInterval(fetchRequests, 5000);
-    return () => clearInterval(interval);
+    
+    // 실시간 구독 설정 (Realtime)
+    const channel = supabase
+      .channel('schema-db-changes')
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public', table: 'reservations' },
+        () => fetchRequests()
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, []);
 
   const fetchRequests = async () => {
-    try {
-      const response = await axios.get('/api/requests');
-      setRequests(response.data.reverse());
-      setLoading(false);
-    } catch (error) {
-      console.error('Error fetching requests:', error);
-      setLoading(false);
+    const { data, error } = await supabase
+      .from('reservations')
+      .select('*')
+      .order('timestamp', { ascending: false });
+
+    if (error) {
+      console.error('Error fetching reservations:', error);
+      return;
+    }
+    setRequests(data);
+  };
+
+  const updateStatus = async (id: number, newStatus: string) => {
+    const { error } = await supabase
+      .from('reservations')
+      .update({ status: newStatus })
+      .eq('id', id);
+
+    if (error) alert('상태 업데이트 실패');
+    else fetchRequests();
+  };
+
+  const deleteRequest = async (id: number) => {
+    if (window.confirm('기록을 삭제하시겠습니까?')) {
+      const { error } = await supabase
+        .from('reservations')
+        .delete()
+        .eq('id', id);
+      
+      if (error) alert('삭제 실패');
+      else fetchRequests();
     }
   };
 
-  const updateStatus = async (id: number, status: string) => {
-    try {
-      await axios.patch(`/api/requests/${id}`, { status });
-      fetchRequests();
-    } catch (error) {
-      console.error('Error updating status:', error);
-    }
-  };
-
-  if (loading) return (
-    <div className="flex items-center justify-center h-screen bg-gray-50">
-      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#A89486]"></div>
-    </div>
+  const filteredRequests = requests.filter(req => 
+    req.patient_name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   return (
-    <div className="space-y-10 max-w-6xl mx-auto py-10">
-      <header className="flex justify-between items-end border-b border-gray-200 pb-8">
+    <div className="max-w-6xl mx-auto space-y-8 animate-in fade-in duration-700 pb-20">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
-          <h1 className="text-4xl font-black text-gray-900 tracking-tight">Consultation Dashboard</h1>
-          <p className="text-gray-400 mt-2 font-medium">실시간 환자 상담 요청 내역을 관리합니다.</p>
+          <h1 className="text-4xl font-black text-[#2C2C2C] tracking-tight">예약 요청 확인</h1>
+          <p className="text-[#9A8F8A] font-medium mt-1 uppercase text-xs tracking-widest">Real-time incoming patient requests</p>
         </div>
-        <button 
-          onClick={fetchRequests}
-          className="flex items-center space-x-2 bg-white border border-gray-200 px-6 py-3 rounded-2xl hover:bg-gray-50 transition-all shadow-sm font-bold text-gray-600"
-        >
-          <RefreshCw size={18} />
-          <span>새로고침</span>
-        </button>
-      </header>
+        
+        <div className="relative w-full md:w-72">
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-[#DED9D4]" size={18} />
+          <input 
+            type="text" 
+            placeholder="환자 성함 검색..."
+            className="w-full pl-12 pr-6 py-4 bg-white rounded-2xl shadow-sm border border-[#E9E4E0] outline-none focus:ring-2 focus:ring-[#A89486]/20 transition-all font-bold"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+        </div>
+      </div>
 
       <div className="grid gap-6">
-        {requests.length === 0 ? (
-          <div className="bg-white p-24 text-center rounded-[3rem] border-2 border-dashed border-gray-100 flex flex-col items-center space-y-4">
-            <ClipboardList size={64} className="text-gray-100" />
-            <p className="text-gray-300 text-xl font-medium">현재 대기 중인 상담 요청이 없습니다.</p>
-          </div>
-        ) : (
-          requests.map(req => (
-            <div 
-              key={req.id} 
-              className={`group bg-white p-8 rounded-[2.5rem] shadow-sm border-2 transition-all duration-300 flex flex-col md:flex-row md:items-center justify-between gap-8 ${
-                req.status === '대기 중' ? 'border-blue-50/50 hover:border-blue-100' : 'border-transparent opacity-60'
-              }`}
-            >
-              <div className="flex-1 space-y-6">
-                <div className="flex items-center space-x-4">
-                  <div className={`w-12 h-12 rounded-2xl flex items-center justify-center ${
-                    req.status === '대기 중' ? 'bg-[#A89486] text-white' : 'bg-gray-100 text-gray-400'
-                  }`}>
-                    <User size={24} />
-                  </div>
-                  <div>
-                    <div className="flex items-center space-x-3">
-                      <h3 className="text-2xl font-black text-gray-900">{req.patientName || '익명 환자'}</h3>
-                      <span className={`px-4 py-1 rounded-full text-xs font-black uppercase tracking-widest ${
-                        req.status === '대기 중' ? 'bg-orange-100 text-orange-600' : 'bg-gray-100 text-gray-500'
-                      }`}>
-                        {req.status}
-                      </span>
-                    </div>
-                    <p className="text-gray-400 text-sm font-medium mt-1">{req.timestamp}</p>
-                  </div>
+        {filteredRequests.length > 0 ? (
+          filteredRequests.map((req) => (
+            <div key={req.id} className="bg-white rounded-[2.5rem] p-8 shadow-sm border border-[#E9E4E0] flex flex-col md:flex-row justify-between items-start md:items-center gap-8 group hover:shadow-xl hover:border-[#A89486]/30 transition-all duration-500">
+              <div className="flex items-center space-x-8 w-full md:w-auto">
+                <div className={`w-16 h-16 rounded-full flex items-center justify-center flex-shrink-0 ${
+                  req.status === '완료' ? 'bg-green-50 text-green-500' : 'bg-orange-50 text-orange-400'
+                }`}>
+                  {req.status === '완료' ? <CheckCircle size={28} /> : <Clock size={28} className="animate-pulse" />}
                 </div>
                 
-                <div className="flex flex-wrap gap-2 pl-16">
-                  {req.selectedItems.map((item, idx) => (
-                    <span key={idx} className="bg-[#F8F5F2] text-[#A89486] px-4 py-2 rounded-xl text-sm font-bold border border-[#F2EFEB]">
-                      {item}
-                    </span>
-                  ))}
+                <div className="space-y-1">
+                  <div className="flex items-center space-x-3">
+                    <h3 className="text-2xl font-black text-[#2C2C2C] tracking-tight">{req.patient_name} 님</h3>
+                    <span className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest ${
+                      req.status === '완료' ? 'bg-green-100 text-green-600' : 'bg-orange-100 text-orange-600'
+                    }`}>{req.status}</span>
+                  </div>
+                  <p className="text-xs text-[#DED9D4] font-bold uppercase tracking-tighter">
+                    {new Date(req.timestamp).toLocaleString('ko-KR')}
+                  </p>
                 </div>
               </div>
-              
-              <div className="md:pl-8 border-l border-gray-100 flex items-center">
-                {req.status === '대기 중' ? (
+
+              <div className="flex-1 flex flex-wrap gap-2">
+                {req.selected_items.map((item, i) => (
+                  <span key={i} className="bg-[#FAF9F6] border border-[#F2EFEB] text-[#5D5451] px-4 py-2 rounded-xl text-sm font-bold shadow-sm">
+                    {item}
+                  </span>
+                ))}
+              </div>
+
+              <div className="flex items-center space-x-3 w-full md:w-auto">
+                {req.status !== '완료' && (
                   <button 
-                    onClick={() => updateStatus(req.id, '상담 완료')}
-                    className="w-full md:w-auto bg-[#2C2C2C] text-white px-8 py-4 rounded-[1.5rem] font-bold hover:bg-[#A89486] transition-all flex items-center justify-center space-x-3 shadow-xl active:scale-95"
+                    onClick={() => updateStatus(req.id, '완료')}
+                    className="flex-1 md:flex-none bg-[#2C2C2C] text-white px-6 py-3 rounded-xl font-black text-sm hover:bg-green-600 transition-all"
                   >
-                    <Check size={20} />
-                    <span>상담 완료 처리</span>
-                  </button>
-                ) : (
-                  <button 
-                    onClick={() => updateStatus(req.id, '대기 중')}
-                    className="w-full md:w-auto bg-gray-100 text-gray-600 px-8 py-4 rounded-[1.5rem] font-bold hover:bg-white hover:border-gray-200 border border-transparent transition-all flex items-center justify-center space-x-3"
-                  >
-                    <Clock size={20} />
-                    <span>다시 대기로 변경</span>
+                    완료 처리
                   </button>
                 )}
+                <button 
+                  onClick={() => deleteRequest(req.id)}
+                  className="p-3 text-red-300 hover:text-red-500 hover:bg-red-50 rounded-xl transition-all"
+                >
+                  <Trash2 size={20} />
+                </button>
               </div>
             </div>
           ))
+        ) : (
+          <div className="bg-white rounded-[3rem] p-20 border-2 border-dashed border-[#E9E4E0] text-center space-y-4 opacity-40">
+            <Clock size={48} className="mx-auto text-[#A89486]" />
+            <p className="text-xl font-bold text-[#9A8F8A]">새로운 예약 요청이 없습니다.</p>
+          </div>
         )}
       </div>
     </div>

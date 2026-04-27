@@ -1,0 +1,873 @@
+[
+  {
+    "id": 1001,
+    "category": "이달의 이벤트",
+    "subCategory": "피부",
+    "name": "여드름 흉터 (트랜스테라피) (이달)",
+    "price": "50,000",
+    "description": "패인 흉터를 차오르게 하는 후한의원만의 독자적인 흉터 복원 시술입니다.",
+    "duration": "60분~",
+    "image": "/images/menu_1001.png",
+    "options": [
+      { "label": "1개 (부분)", "price": "50,000" },
+      { "label": "면적당 시술", "price": "200,000~" }
+    ]
+  },
+  {
+    "id": 1002,
+    "category": "이달의 이벤트",
+    "subCategory": "피부",
+    "name": "등·가슴 여드름 케어 (이달)",
+    "price": "171,000",
+    "description": "등이나 가슴 부위의 여드름과 자국을 동시에 해결하는 집중 패키지입니다. (5세트 결제 시 1회 가격)",
+    "duration": "60분",
+    "image": "/images/menu_1002.png",
+    "options": [
+      { "label": "등여드름 (상부) 1회", "price": "171,000" },
+      { "label": "가슴여드름 (전체) 1회", "price": "171,000" }
+    ]
+  },
+  {
+    "id": 1003,
+    "category": "이달의 이벤트",
+    "subCategory": "피부",
+    "name": "모공각화증 (팔·종아리) (이달)",
+    "price": "200,000",
+    "description": "오톨도톨한 닭살 피부를 매끄럽게 개선하는 필링 및 재생 관리입니다. (5세트 결제 시 1회 가격)",
+    "duration": "50분",
+    "image": "/images/모공각화증.png",
+    "options": [
+      { "label": "팔 모공각화증 (전체) 1회", "price": "200,000" },
+      { "label": "종아리 모공각화증 (한부위) 1회", "price": "200,000" }
+    ]
+  },
+  {
+    "id": 1101,
+    "category": "이달의 이벤트",
+    "subCategory": "다이어트",
+    "name": "다요정 (다이어트 정약) (이달)",
+    "price": "70,000",
+    "description": "복용이 간편하고 효과가 빠른 알약 형태의 다이어트 한약입니다.",
+    "duration": "2주/3개월",
+    "image": "/images/다요정2.jpg",
+    "options": [
+      { "label": "2주 체험분 (90정)", "price": "70,000" },
+      { "label": "3개월분 패키지", "price": "390,000" }
+    ]
+  },
+  {
+    "id": 1102,
+    "category": "이달의 이벤트",
+    "subCategory": "다이어트",
+    "name": "비톡스 (V-Tox) 프로그램 (이달)",
+    "price": "99,000",
+    "description": "체내 독소를 배출하고 신진대사를 활성화하는 단기 집중 해독 다이어트입니다.",
+    "duration": "7일/10일",
+    "image": "/images/비움탕2.jpg",
+    "options": [
+      { "label": "7일 프로그램", "price": "99,000" },
+      { "label": "10일 프로그램", "price": "160,000" }
+    ]
+  },
+  {
+    "id": 1103,
+    "category": "이달의 이벤트",
+    "subCategory": "다이어트",
+    "name": "다요스틱 (농축환) (이달)",
+    "price": "80,000",
+    "description": "휴대가 간편하고 효과가 뛰어난 고농축 환 형태의 다이어트 한약입니다.",
+    "duration": "2주/3개월",
+    "image": "/images/다요스틱.JPG",
+    "options": [
+      { "label": "2주 체험분", "price": "80,000" },
+      { "label": "3개월분 패키지", "price": "650,000" }
+    ]
+  },
+  {
+    "id": 1104,
+    "category": "이달의 이벤트",
+    "subCategory": "다이어트",
+    "name": "두배더블 유지 프로그램 (이달)",
+    "price": "상담문의",
+    "description": "감량 후 요요 방지를 위한 장기 유지 관리 프로그램입니다. (최대 9개월 추가 증정)",
+    "duration": "유지기 관리",
+    "image": "/images/미감탕2.JPG",
+    "options": [
+      { "label": "2개월 결제 시 4개월 증정", "price": "상담문의" },
+      { "label": "3개월 결제 시 9개월 증정", "price": "상담문의" }
+    ]
+  },
+  {
+    "id": 1,
+    "category": "1회 체험 이벤트",
+    "subCategory": "피부관리",
+    "name": "관리사 압출 + 약침 (1회)",
+    "price": "29,900",
+    "description": "전문 관리사의 꼼꼼한 압출과 염증을 진정시키는 한방 약침 시술입니다.",
+    "duration": "40분",
+    "image": "/images/menu_1.png",
+    "options": [{ "label": "1회 체험", "price": "29,900" }]
+  },
+  {
+    "id": 2,
+    "category": "1회 체험 이벤트",
+    "subCategory": "피부관리",
+    "name": "아쿠아필 + 약침 (1회)",
+    "price": "19,900",
+    "description": "모공 속 노폐물 제거와 수분 공급, 그리고 약침으로 피부를 진정시킵니다.",
+    "duration": "40분",
+    "image": "/images/menu_2.png",
+    "options": [{ "label": "1회 체험", "price": "19,900" }]
+  },
+  {
+    "id": 3,
+    "category": "1회 체험 이벤트",
+    "subCategory": "피부관리",
+    "name": "PDT + 약침 (1회)",
+    "price": "9,900",
+    "description": "피지선을 억제하는 PDT 광동역 치료와 진정 약침 세트입니다.",
+    "duration": "30분",
+    "image": "/images/menu_3.png",
+    "options": [{ "label": "1회 체험", "price": "9,900" }]
+  },
+  {
+    "id": 6,
+    "category": "1회 체험 이벤트",
+    "subCategory": "피부관리",
+    "name": "코 모공 관리 (1회)",
+    "price": "59,000",
+    "description": "늘어지고 넓어진 코 모공을 집중적으로 케어하는 관리입니다.",
+    "duration": "50분",
+    "image": "/images/menu_6.png",
+    "options": [{ "label": "1회 체험", "price": "59,000" }]
+  },
+  {
+    "id": 4,
+    "category": "1회 체험 이벤트",
+    "subCategory": "피부질환",
+    "name": "편평사마귀 제거 (개당) (1회)",
+    "price": "5,000",
+    "description": "편평사마귀를 깨끗하고 안전하게 제거하는 전문 레이저 시술입니다.",
+    "duration": "10분~",
+    "image": "/images/menu_4.png",
+    "maxCount": 10,
+    "options": [{ "label": "개당", "price": "5,000" }]
+  },
+  {
+    "id": 5,
+    "category": "1회 체험 이벤트",
+    "subCategory": "피부질환",
+    "name": "스마트피파침 (1회)",
+    "price": "10,000",
+    "description": "피지선증식증, 한관종 전문 치료 시술입니다.",
+    "duration": "20분~",
+    "image": "/images/menu_5.png",
+    "maxCount": 5,
+    "options": [{ "label": "개당", "price": "10,000" }]
+  },
+  {
+    "id": 7,
+    "category": "1회 체험 이벤트",
+    "subCategory": "스킨부스터",
+    "name": "QTCell 블랙라벨 (1회)",
+    "price": "69,000",
+    "description": "피부 재생과 탄력을 위한 프리미엄 스킨부스터 시술입니다.",
+    "duration": "30분",
+    "image": "/images/qtcell.png",
+    "options": [{ "label": "1회 체험", "price": "69,000" }]
+  },
+  {
+    "id": 8,
+    "category": "1회 체험 이벤트",
+    "subCategory": "스킨부스터",
+    "name": "셀액티브 스킨부스터 (1회)",
+    "price": "49,900",
+    "description": "세포 활성화를 돕는 성분을 피부 깊숙이 전달하는 스킨부스터입니다.",
+    "duration": "30분",
+    "image": "/images/cellactive.webp",
+    "options": [{ "label": "1회 체험", "price": "49,900" }]
+  },
+  {
+    "id": 9,
+    "category": "1회 체험 이벤트",
+    "subCategory": "스킨부스터",
+    "name": "PDRN 스킨부스터 (1회)",
+    "price": "29,900",
+    "description": "연어 주사 성분으로 잘 알려진 PDRN을 활용한 피부 재생 관리입니다.",
+    "duration": "30분",
+    "image": "/images/menu_9.png",
+    "options": [{ "label": "1회 체험", "price": "29,900" }]
+  },
+  {
+    "id": 10,
+    "category": "1회 체험 이벤트",
+    "subCategory": "스킨부스터",
+    "name": "미주안 PN 약침 (1회)",
+    "price": "69,000",
+    "description": "피부 장벽 강화와 재생에 효과적인 고농축 PN 성분 약침입니다.",
+    "duration": "20분",
+    "image": "/images/미주안.png",
+    "options": [{ "label": "1회 체험", "price": "69,000" }]
+  },
+  {
+    "id": 11,
+    "category": "1회 체험 이벤트",
+    "subCategory": "스킨부스터",
+    "name": "연아 약침 (1회)",
+    "price": "49,900",
+    "description": "미백과 광채, 피부 결 개선에 도움을 주는 프리미엄 약침입니다.",
+    "duration": "20분",
+    "image": "/images/연아.jpg",
+    "options": [{ "label": "1회 체험", "price": "49,900" }]
+  },
+  {
+    "id": 12,
+    "category": "1회 체험 이벤트",
+    "subCategory": "리프팅/바디관리",
+    "name": "LIPOSA 윤곽약침 (1회)",
+    "price": "19,900",
+    "description": "불필요한 얼굴 지방을 정리하여 매끄러운 라인을 만들어줍니다.",
+    "duration": "15분",
+    "image": "/images/liposa.png",
+    "options": [{ "label": "1회 체험", "price": "19,900" }]
+  },
+  {
+    "id": 13,
+    "category": "1회 체험 이벤트",
+    "subCategory": "리프팅/바디관리",
+    "name": "마황천오약침 (1회)",
+    "price": "19,900",
+    "description": "복부 또는 팔뚝의 지방 분해를 돕는 강력한 다이어트 약침입니다.",
+    "duration": "20분",
+    "image": "/images/menu_13.png",
+    "options": [{ "label": "1회 체험", "price": "19,900" }]
+  },
+  {
+    "id": 14,
+    "category": "1회 체험 이벤트",
+    "subCategory": "리프팅/바디관리",
+    "name": "쿨쉐이핑 (복부) (1회)",
+    "price": "19,900",
+    "description": "냉각 지방 분해술을 통해 복부 지방 세포를 효과적으로 감소시킵니다.",
+    "duration": "45분",
+    "image": "/images/쿨쉐이핑.png",
+    "options": [{ "label": "1회 체험", "price": "19,900" }]
+  },
+  {
+    "id": 15,
+    "category": "1회 체험 이벤트",
+    "subCategory": "리프팅/바디관리",
+    "name": "HIFU 리프팅 100샷 (1회)",
+    "price": "19,900",
+    "description": "고강도 집속 초음파를 이용하여 피부 속부터 탄력을 채워주는 리프팅입니다.",
+    "duration": "20분",
+    "image": "/images/menu_15.png",
+    "options": [{ "label": "100샷 체험", "price": "19,900" }]
+  },
+  {
+    "id": 2001,
+    "category": "여드름",
+    "subCategory": "여드름-한약포함 프로그램",
+    "name": "후 아크네 라이트(4주)",
+    "price": "670,000",
+    "description": "진정관리 3회 + 시술 1회 + 홈케어 set 포함",
+    "duration": "4주 프로그램",
+    "image": "/images/menu_1.png",
+    "options": [
+      { "label": "후 아크네스틱 포함", "price": "670,000" },
+      { "label": "맞춤한약 포함", "price": "760,000" },
+      { "label": "후 아크네스틱 + 아쿠아필 포함", "price": "730,000" },
+      { "label": "맞춤한약 + 아쿠아필 포함", "price": "820,000" }
+    ]
+  },
+  {
+    "id": 2002,
+    "category": "여드름",
+    "subCategory": "여드름-한약포함 프로그램",
+    "name": "후 아크네 라이트(8주)",
+    "price": "1,090,000",
+    "description": "진정관리 6회 + 시술 2회 + 홈케어 set 포함",
+    "duration": "8주 프로그램",
+    "image": "/images/menu_1.png",
+    "options": [
+      { "label": "후 아크네스틱 포함", "price": "1,090,000" },
+      { "label": "맞춤한약 포함", "price": "1,290,000" },
+      { "label": "후 아크네스틱 + 아쿠아필 포함", "price": "1,190,000" },
+      { "label": "맞춤한약 + 아쿠아필 포함", "price": "1,390,000" }
+    ]
+  },
+  {
+    "id": 2003,
+    "category": "여드름",
+    "subCategory": "여드름-한약포함 프로그램",
+    "name": "후 아크네",
+    "price": "1,750,000",
+    "description": "진정관리 10회 + 시술 3회 + 홈케어 set 포함",
+    "duration": "10주+ 프로그램",
+    "image": "/images/menu_1.png",
+    "options": [
+      { "label": "후 아크네스틱 포함", "price": "1,750,000" },
+      { "label": "맞춤한약 포함", "price": "1,890,000" },
+      { "label": "후 아크네스틱 + 아쿠아필 포함", "price": "1,950,000" },
+      { "label": "맞춤한약 + 아쿠아필 포함", "price": "2,090,000" }
+    ]
+  },
+  {
+    "id": 2101,
+    "category": "여드름",
+    "subCategory": "여드름-한약제외 프로그램",
+    "name": "후 애프터케어",
+    "price": "690,000",
+    "description": "진정관리 및 아쿠아필 집중 케어",
+    "duration": "10회 패키지",
+    "image": "/images/menu_2.png",
+    "options": [
+      { "label": "진정관리+아쿠아필 10회", "price": "690,000" },
+      { "label": "진정관리+아쿠아필 10회 + 시술 3회", "price": "1,190,000" }
+    ]
+  },
+  {
+    "id": 2102,
+    "category": "여드름",
+    "subCategory": "여드름-한약제외 프로그램",
+    "name": "후 애프터케어(슬림)",
+    "price": "390,000",
+    "description": "진정관리 5회 + 홈케어 2종 포함",
+    "duration": "5회 패키지",
+    "image": "/images/menu_2.png",
+    "options": [{ "label": "기본", "price": "390,000" }]
+  },
+  {
+    "id": 2103,
+    "category": "여드름",
+    "subCategory": "여드름-한약제외 프로그램",
+    "name": "압출 1회(관리사+원장) + 약침",
+    "price": "79,000",
+    "description": "관리사와 원장님이 직접 꼼꼼하게 진행하는 압출 및 염증 완화 약침",
+    "duration": "60분",
+    "image": "/images/menu_1.png",
+    "options": [{ "label": "1회", "price": "79,000" }]
+  },
+  {
+    "id": 2104,
+    "category": "여드름",
+    "subCategory": "여드름-한약제외 프로그램",
+    "name": "압출 1회(관리사) + 약침",
+    "price": "59,000",
+    "description": "전문 관리사의 꼼꼼한 압출 및 염증 완화 약침",
+    "duration": "50분",
+    "image": "/images/menu_1.png",
+    "options": [{ "label": "1회", "price": "59,000" }]
+  },
+  {
+    "id": 2105,
+    "category": "여드름",
+    "subCategory": "여드름-한약제외 프로그램",
+    "name": "아쿠아필 + 약침",
+    "price": "49,000",
+    "description": "모공 청소와 수분 공급, 염증 진정 효과",
+    "duration": "45분",
+    "image": "/images/menu_2.png",
+    "options": [{ "label": "1회", "price": "49,000" }]
+  },
+  {
+    "id": 2106,
+    "category": "여드름",
+    "subCategory": "여드름-한약제외 프로그램",
+    "name": "피부 진정/소염 약침",
+    "price": "20,000",
+    "description": "국소 부위 염증을 빠르게 가라앉히는 소염 약침",
+    "duration": "10분",
+    "image": "/images/안면약침.png",
+    "options": [{ "label": "1회", "price": "20,000" }]
+  },
+  {
+    "id": 3001,
+    "category": "흉터 색소 자국 모공",
+    "subCategory": "흉터, 색소",
+    "name": "피움테라피 (얼굴전체 흉터치료)",
+    "price": "1,190,000",
+    "description": "시술과 재생이 반복되는 후한의원만의 통합 흉터/색소 치료 프로그램",
+    "duration": "8~20주 프로그램",
+    "image": "/images/menu_1001.png",
+    "options": [
+      { "label": "8주 프로그램 (4 Cycle)", "price": "1,190,000" },
+      { "label": "14주 프로그램 (7 Cycle)", "price": "1,790,000" },
+      { "label": "20주 프로그램 (10 Cycle)", "price": "2,290,000" }
+    ]
+  },
+  {
+    "id": 3002,
+    "category": "흉터 색소 자국 모공",
+    "subCategory": "흉터, 색소",
+    "name": "심플 피움테라피 (부분 흉터)",
+    "price": "690,000",
+    "description": "고민되는 특정 부위만 집중적으로 치료하는 부분 흉터 프로그램",
+    "duration": "4~10회 프로그램",
+    "image": "/images/menu_1001.png",
+    "options": [
+      { "label": "4회 프로그램 (4 Cycle)", "price": "690,000" },
+      { "label": "7회 프로그램 (7 Cycle)", "price": "990,000" },
+      { "label": "10회 프로그램 (10 Cycle)", "price": "1,290,000" }
+    ]
+  },
+  {
+    "id": 3003,
+    "category": "흉터 색소 자국 모공",
+    "subCategory": "흉터, 색소",
+    "name": "색소치료 프로그램",
+    "price": "1,190,000",
+    "description": "칙칙한 피부톤과 잡티를 맑게 개선하는 맞춤형 색소 치료",
+    "duration": "10~14주 프로그램",
+    "image": "/images/안면홍조.jpg",
+    "options": [
+      { "label": "10주 프로그램 (재생5+시술5)", "price": "1,190,000" },
+      { "label": "14주 프로그램 (재생7+시술7)", "price": "1,590,000" }
+    ]
+  },
+  {
+    "id": 3004,
+    "category": "흉터 색소 자국 모공",
+    "subCategory": "흉터, 색소",
+    "name": "트랜스테라피 (1부위)",
+    "price": "69,000",
+    "description": "강력한 흉터 복원력을 가진 후한의원 독자 시술",
+    "duration": "단품 시술",
+    "image": "/images/menu_1001.png",
+    "options": [{ "label": "1회", "price": "69,000" }]
+  },
+  {
+    "id": 3101,
+    "category": "흉터 색소 자국 모공",
+    "subCategory": "자국, 모공",
+    "name": "여드름 자국 완화 프로그램",
+    "price": "650,000",
+    "description": "붉고 어두운 여드름 자국을 빠르게 개선하는 맞춤 프로그램",
+    "duration": "6~10주 프로그램",
+    "image": "/images/menu_2.png",
+    "options": [
+      { "label": "6주 프로그램 (재생3+시술2+부스터1)", "price": "650,000" },
+      { "label": "10주 프로그램 (재생4+시술3+부스터3)", "price": "1,190,000" }
+    ]
+  },
+  {
+    "id": 3102,
+    "category": "흉터 색소 자국 모공",
+    "subCategory": "자국, 모공",
+    "name": "모공치료 프로그램",
+    "price": "290,000",
+    "description": "넓어진 모공과 피부 요철을 매끄럽게 케어",
+    "duration": "4~10주 프로그램",
+    "image": "/images/모공각화증.png",
+    "options": [
+      { "label": "코모공 관리 4주 (압출2+시술2)", "price": "290,000" },
+      { "label": "코모공 관리 8주 (압출4+시술4)", "price": "550,000" },
+      { "label": "얼굴 전체 모공 관리 6주 (압출3+시술3)", "price": "990,000" },
+      { "label": "얼굴 전체 모공 관리 10주 (압출5+시술5)", "price": "1,490,000" }
+    ]
+  },
+  {
+    "id": 4001,
+    "category": "스킨부스터",
+    "subCategory": "스킨부스터 - 도포흡수",
+    "name": "QTcell 블랙라벨 10cc",
+    "price": "140,000",
+    "description": "풍부한 유효성분으로 피부의 근본적인 재생을 돕는 프리미엄 스킨부스터",
+    "duration": "30분",
+    "image": "/images/qtcell.png",
+    "options": [
+      { "label": "1회", "price": "140,000" },
+      { "label": "3회", "price": "390,000" },
+      { "label": "5회", "price": "590,000" }
+    ]
+  },
+  {
+    "id": 4002,
+    "category": "스킨부스터",
+    "subCategory": "스킨부스터 - 도포흡수",
+    "name": "셀액티브 스킨부스터 3.3cc",
+    "price": "100,000",
+    "description": "강력한 성장인자와 줄기세포 유래 성분이 함유된 세포 활성 스킨부스터",
+    "duration": "30분",
+    "image": "/images/cellactive.webp",
+    "options": [
+      { "label": "1회", "price": "100,000" },
+      { "label": "3회", "price": "270,000" },
+      { "label": "5회", "price": "420,000" }
+    ]
+  },
+  {
+    "id": 4003,
+    "category": "스킨부스터",
+    "subCategory": "스킨부스터 - 도포흡수",
+    "name": "셀엑소좀 블랙라벨 3cc",
+    "price": "250,000",
+    "description": "가장 진보된 줄기세포 엑소좀 기술로 노화된 피부 환경을 근본적으로 개선",
+    "duration": "30분",
+    "image": "/images/셀엑소좀블랙라벨.JPG",
+    "options": [
+      { "label": "1회", "price": "250,000" },
+      { "label": "3회", "price": "720,000" },
+      { "label": "5회", "price": "1,180,000" }
+    ]
+  },
+  {
+    "id": 4004,
+    "category": "스킨부스터",
+    "subCategory": "스킨부스터 - 직접주입",
+    "name": "PDRN스킨부스터 2cc",
+    "price": "70,000",
+    "description": "연어 DNA에서 추출한 재생 성분으로 예민해진 피부를 빠르게 진정시키고 재생",
+    "duration": "30분",
+    "image": "/images/menu_9.png",
+    "options": [
+      { "label": "1회", "price": "70,000" },
+      { "label": "3회", "price": "200,000" },
+      { "label": "5회", "price": "300,000" }
+    ]
+  },
+  {
+    "id": 4005,
+    "category": "스킨부스터",
+    "subCategory": "스킨부스터 - 직접주입",
+    "name": "미주안 PN약침 2cc(나비존)",
+    "price": "140,000",
+    "description": "나비존 집중 케어를 위한 고농축 PN 성분 약침",
+    "duration": "20분",
+    "image": "/images/미주안.png",
+    "options": [
+      { "label": "1회", "price": "140,000" },
+      { "label": "3회", "price": "390,000" },
+      { "label": "5회", "price": "590,000" }
+    ]
+  },
+  {
+    "id": 4006,
+    "category": "스킨부스터",
+    "subCategory": "스킨부스터 - 직접주입",
+    "name": "미주안 PN약침 4cc(얼굴전체)",
+    "price": "270,000",
+    "description": "얼굴 전체 장벽 강화와 탄력 개선을 위한 고농축 PN 성분 약침",
+    "duration": "30분",
+    "image": "/images/미주안.png",
+    "options": [
+      { "label": "1회", "price": "270,000" },
+      { "label": "3회", "price": "750,000" },
+      { "label": "5회", "price": "1,150,000" }
+    ]
+  },
+  {
+    "id": 4007,
+    "category": "스킨부스터",
+    "subCategory": "스킨부스터 - 직접주입",
+    "name": "연아약침 2cc",
+    "price": "80,000",
+    "description": "미백과 광채, 피부 결 개선에 도움을 주는 프리미엄 약침",
+    "duration": "20분",
+    "image": "/images/연아.jpg",
+    "options": [
+      { "label": "1회", "price": "80,000" },
+      { "label": "3회", "price": "220,000" },
+      { "label": "5회", "price": "350,000" }
+    ]
+  },
+  {
+    "id": 5001,
+    "category": "리프팅/바디관리",
+    "name": "안면 HIFU 300샷 + 윤곽약침",
+    "price": "99,000",
+    "description": "고강도 집속 초음파 리프팅과 얼굴 라인을 정리하는 윤곽약침 결합 프로그램",
+    "duration": "45분",
+    "image": "/images/menu_15.png",
+    "options": [
+      { "label": "1회", "price": "99,000" },
+      { "label": "3회", "price": "280,000" },
+      { "label": "5회", "price": "450,000" }
+    ]
+  },
+  {
+    "id": 5002,
+    "category": "리프팅/바디관리",
+    "name": "LIPOSA 윤곽약침 2cc",
+    "price": "29,000",
+    "description": "불필요한 지방을 분해하여 매끄러운 V라인을 만드는 고농축 윤곽 약침",
+    "duration": "15분",
+    "image": "/images/liposa.png",
+    "options": [
+      { "label": "1회", "price": "29,000" },
+      { "label": "5회", "price": "140,000" },
+      { "label": "10회", "price": "270,000" }
+    ]
+  },
+  {
+    "id": 5003,
+    "category": "리프팅/바디관리",
+    "name": "등 흉터 자국 치료",
+    "price": "720,000",
+    "description": "등 부위의 여드름 흉터와 자국을 깨끗하게 개선하는 집중 프로그램",
+    "duration": "3~5회 프로그램",
+    "image": "/images/menu_1002.png",
+    "options": [
+      { "label": "등 3회 프로그램 (압출/시술 3회+홈케어)", "price": "720,000" },
+      { "label": "등 5회 프로그램 (압출/시술 5회+홈케어)", "price": "1,080,000" }
+    ]
+  },
+  {
+    "id": 5004,
+    "category": "리프팅/바디관리",
+    "name": "가슴 흉터 자국 치료",
+    "price": "590,000",
+    "description": "가슴 부위의 여드름 흉터와 자국을 개선하여 매끄러운 피부로 회복",
+    "duration": "3~5회 프로그램",
+    "image": "/images/menu_1002.png",
+    "options": [
+      { "label": "가슴 3회 프로그램 (압출/시술 3회+홈케어)", "price": "590,000" },
+      { "label": "가슴 5회 프로그램 (압출/시술 5회+홈케어)", "price": "890,000" }
+    ]
+  },
+  {
+    "id": 6001,
+    "category": "피부질환",
+    "name": "사율테라피 (사마귀 치료)",
+    "price": "450,000",
+    "description": "사마귀 바이러스를 억제하고 면역력을 높이는 한방 치료",
+    "duration": "1~3개월 프로그램",
+    "image": "/images/menu_5.png",
+    "options": [
+      { "label": "맞춤한약 1개월", "price": "450,000" },
+      { "label": "맞춤한약 2개월", "price": "790,000" },
+      { "label": "맞춤한약 3개월", "price": "1,190,000" },
+      { "label": "Simple 2개월 (한약은 첫달만)", "price": "570,000" },
+      { "label": "Simple 3개월 (한약은 첫달만)", "price": "670,000" }
+    ]
+  },
+  {
+    "id": 6002,
+    "category": "피부질환",
+    "name": "사율테라피 (편평사마귀, 쥐젖)",
+    "price": "590,000",
+    "description": "편평사마귀와 쥐젖을 깨끗하게 제거하고 재생을 돕는 프로그램",
+    "duration": "4~8주 프로그램",
+    "image": "/images/menu_4.png",
+    "options": [
+      { "label": "맞춤한약 4주 (시술2+한약60포)", "price": "590,000" },
+      { "label": "맞춤한약 6주 (시술3+한약90포)", "price": "990,000" },
+      { "label": "맞춤한약 8주 (시술4+한약120포)", "price": "1,390,000" },
+      { "label": "Simple 6주 (시술3, 한약없음)", "price": "690,000" },
+      { "label": "Simple 8주 (시술4, 한약없음)", "price": "890,000" }
+    ]
+  },
+  {
+    "id": 6003,
+    "category": "피부질환",
+    "name": "지루성 피부염 / 주사피부염 치료",
+    "price": "950,000",
+    "description": "염증을 진정시키고 피부 장벽을 복구하는 예민 피부 집중 치료",
+    "duration": "6~11주 프로그램",
+    "image": "/images/안면약침.png",
+    "options": [
+      { "label": "6주 프로그램 (한약+진정4+시술2)", "price": "950,000" },
+      { "label": "11주 프로그램 (한약+진정7+시술4)", "price": "1,790,000" },
+      { "label": "6주 프로그램 + 아쿠아필", "price": "1,050,000" },
+      { "label": "11주 프로그램 + 아쿠아필", "price": "1,940,000" }
+    ]
+  },
+  {
+    "id": 6004,
+    "category": "피부질환",
+    "name": "피부질환 프로그램 (기본)",
+    "price": "450,000",
+    "description": "습진, 건선, 아토피 등 일반 피부질환을 위한 한약 및 침치료",
+    "duration": "1~3개월 프로그램",
+    "image": "/images/menu_5.png",
+    "options": [
+      { "label": "1개월 프로그램 (한약+침4+외용제)", "price": "450,000" },
+      { "label": "2개월 프로그램 (한약+침9+외용제)", "price": "890,000" },
+      { "label": "3개월 프로그램 (한약+침13+외용제)", "price": "1,270,000" }
+    ]
+  },
+  {
+    "id": 6005,
+    "category": "피부질환",
+    "name": "피부 침치료 (보험진료)",
+    "price": "30,000",
+    "description": "건강보험이 적용되는 일반 피부 침치료 (본인부담금 별도)",
+    "duration": "20분",
+    "image": "/images/menu_5.png",
+    "options": [{ "label": "1회", "price": "30,000" }]
+  },
+  {
+    "id": 6006,
+    "category": "피부질환",
+    "name": "편평사마귀 소량 제거 (1회)",
+    "price": "70,000",
+    "description": "적은 수의 편평사마귀를 빠르게 제거",
+    "duration": "20분",
+    "image": "/images/menu_4.png",
+    "options": [{ "label": "10개 이하", "price": "70,000" }]
+  },
+  {
+    "id": 611,
+    "category": "다이어트",
+    "subCategory": "다이어트 한약",
+    "name": "이지비움 다이어트 프로그램",
+    "price": "390,000",
+    "description": "비움탕 3일분 + 미감탕 30일분 + 다이어트 관리 및 상담 4회 포함",
+    "duration": "1~3개월",
+    "image": "/images/미감탕2.JPG",
+    "options": [
+      { "label": "1개월", "price": "390,000" },
+      { "label": "2개월", "price": "750,000" },
+      { "label": "3개월", "price": "1,070,000" }
+    ]
+  },
+  {
+    "id": 612,
+    "category": "다이어트",
+    "subCategory": "다이어트 한약",
+    "name": "다요스틱 (고농축환)",
+    "price": "240,000",
+    "description": "휴대가 간편하고 효과가 강력한 스틱형 농축 환입니다.",
+    "duration": "1~3개월",
+    "image": "/images/다요스틱.JPG",
+    "options": [
+      { "label": "1개월", "price": "240,000" },
+      { "label": "3개월", "price": "690,000" }
+    ]
+  },
+  {
+    "id": 613,
+    "category": "다이어트",
+    "subCategory": "다이어트 한약",
+    "name": "다요시럽 (이지슬림)",
+    "price": "70,000",
+    "description": "맛있고 복용이 간편한 시럽 형태의 다이어트 약입니다.",
+    "duration": "2주~1개월",
+    "image": "/images/미감에스.jpg",
+    "options": [
+      { "label": "2주", "price": "70,000" },
+      { "label": "1개월", "price": "190,000" }
+    ]
+  },
+  {
+    "id": 621,
+    "category": "다이어트",
+    "subCategory": "다이어트 관리",
+    "name": "다이어트 관리 (선택형)",
+    "price": "160,000",
+    "description": "복부 고주파, 중저주파, 왕뜸, 지방분해침 중 2~4종 선택 가능",
+    "duration": "1~3개월",
+    "image": "/images/liposa.png",
+    "options": [
+      { "label": "2종 선택 - 1개월", "price": "160,000" },
+      { "label": "2종 선택 - 2개월", "price": "300,000" },
+      { "label": "2종 선택 - 3개월", "price": "450,000" },
+      { "label": "3종 선택 - 1개월", "price": "240,000" },
+      { "label": "3종 선택 - 2개월", "price": "450,000" },
+      { "label": "3종 선택 - 3개월", "price": "680,000" },
+      { "label": "4종 선택 - 1개월", "price": "320,000" },
+      { "label": "4종 선택 - 2개월", "price": "590,000" },
+      { "label": "4종 선택 - 3개월", "price": "890,000" }
+    ]
+  },
+  {
+    "id": 622,
+    "category": "다이어트",
+    "subCategory": "다이어트 관리",
+    "name": "마황천오약침 (후 슬림약침)",
+    "price": "140,000",
+    "description": "사이즈 감소 효과가 탁월한 사이즈 감소 특화 약침 (5회 기준)",
+    "duration": "5회 패키지",
+    "image": "/images/menu_13.png",
+    "options": [
+      { "label": "1회 5cc (5회 결제시)", "price": "250,000" },
+      { "label": "1회 2.5cc (5회 결제시)", "price": "140,000" }
+    ]
+  },
+  {
+    "id": 623,
+    "category": "다이어트",
+    "subCategory": "다이어트 관리",
+    "name": "산삼비만약침 (후 슬림약침)",
+    "price": "180,000",
+    "description": "지방세포 분해 효과가 뛰어난 프리미엄 비만 약침 (5회 기준)",
+    "duration": "5회 패키지",
+    "image": "/images/menu_13.png",
+    "options": [
+      { "label": "1회 5cc (5회 결제시)", "price": "330,000" },
+      { "label": "1회 2.5cc (5회 결제시)", "price": "180,000" }
+    ]
+  },
+  {
+    "id": 624,
+    "category": "다이어트",
+    "subCategory": "다이어트 관리",
+    "name": "쿨쉐이핑 (냉각지방분해)",
+    "price": "190,000",
+    "description": "강력한 냉각 에너지로 지방세포를 파괴하는 부분 비만 관리",
+    "duration": "3~5회",
+    "image": "/images/쿨쉐이핑.png",
+    "options": [
+      { "label": "단독 5회", "price": "290,000" },
+      { "label": "단독 3회", "price": "190,000" },
+      { "label": "패키지(+약침 5cc) 5회", "price": "550,000" },
+      { "label": "패키지(+약침 5cc) 3회", "price": "350,000" }
+    ]
+  },
+  {
+    "id": 7001,
+    "category": "체질개선/보약",
+    "name": "체질개선 한약 (1일 2회 복용)",
+    "price": "300,000",
+    "description": "개개인의 체질적 약점을 보완하고 몸의 균형을 되찾아주는 맞춤 한약",
+    "duration": "1~3개월 프로그램",
+    "image": "/images/미감탕2.JPG",
+    "options": [
+      { "label": "1개월", "price": "300,000" },
+      { "label": "2개월", "price": "560,000" },
+      { "label": "3개월", "price": "810,000" }
+    ]
+  },
+  {
+    "id": 7002,
+    "category": "체질개선/보약",
+    "name": "녹용보약 (러시아산 녹용 사용)",
+    "price": "490,000",
+    "description": "최고급 러시아산 녹용을 사용하여 기력을 보강하고 면역력을 강화하는 프리미엄 보약",
+    "duration": "1~3개월 프로그램",
+    "image": "/images/미감탕2.JPG",
+    "options": [
+      { "label": "1개월 (1일 2회)", "price": "490,000" },
+      { "label": "2개월 (1일 2회)", "price": "950,000" },
+      { "label": "3개월 (1일 2회)", "price": "1,390,000" }
+    ]
+  },
+  {
+    "id": 7003,
+    "category": "체질개선/보약",
+    "name": "경옥고 스틱",
+    "price": "99,000",
+    "description": "복용과 휴대가 간편한 스틱 형태의 경옥고. 만성 피로와 기력 회복에 탁월",
+    "duration": "30~90포",
+    "image": "/images/경옥고.jpg",
+    "options": [
+      { "label": "1box (30포)", "price": "99,000" },
+      { "label": "3box (90포)", "price": "270,000" }
+    ]
+  },
+  {
+    "id": 7004,
+    "category": "체질개선/보약",
+    "name": "공진단 (사향/녹용)",
+    "price": "180,000",
+    "description": "황제의 보약이라 불리는 공진단. 사향과 녹용 성분으로 집중력과 기력을 극대화",
+    "duration": "10~30환",
+    "image": "/images/공진단.jpg",
+    "options": [
+      { "label": "녹용공진단 10환", "price": "180,000" },
+      { "label": "녹용공진단 30환", "price": "490,000" },
+      { "label": "사향공진단 10환", "price": "400,000" },
+      { "label": "사향공진단 30환", "price": "1,100,000" }
+    ]
+  }
+]
