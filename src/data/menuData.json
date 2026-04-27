@@ -127,7 +127,7 @@
     "price": "상담문의",
     "description": "감량 후 요요 방지를 위한 장기 유지 관리 프로그램입니다. (최대 9개월 추가 증정)",
     "duration": "유지기 관리",
-    "image": "/images/미감탕2.JPG",
+    "image": "/images/migamtang.jpg",
     "options": [
       {
         "label": "2개월 결제 시 4개월 증정",
@@ -621,7 +621,7 @@
     "price": "1,190,000",
     "description": "칙칙한 피부톤과 잡티를 맑게 개선하는 맞춤형 색소 치료",
     "duration": "10~14주 프로그램",
-    "image": "/images/안면홍조.jpg",
+    "image": "/images/facial-redness.jpg",
     "options": [
       {
         "label": "10주 프로그램 (재생5+시술5)",
@@ -753,7 +753,7 @@
     "price": "250,000",
     "description": "가장 진보된 줄기세포 엑소좀 기술로 노화된 피부 환경을 근본적으로 개선",
     "duration": "30분",
-    "image": "/images/cellactive.webp",
+    "image": "/images/cell-exosome.jpg",
     "options": [
       {
         "label": "1회",
@@ -1251,7 +1251,7 @@
     "price": "190,000",
     "description": "강력한 냉각 에너지로 지방세포를 파괴하는 부분 비만 관리",
     "duration": "3~5회",
-    "image": "/images/coolshaping.png",
+    "image": "/images/facial-acupuncture.png",
     "options": [
       {
         "label": "단독 5회",
