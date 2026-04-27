@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Plus, Trash2, Edit2, Save, X, Search, Upload, ImageIcon } from 'lucide-react';
+import { Plus, Trash2, Save, Search, Upload, ImageIcon } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 
 interface MenuOption {
