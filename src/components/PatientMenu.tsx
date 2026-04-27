@@ -33,6 +33,7 @@ const PatientMenu = () => {
   const [expandedParent, setExpandedParent] = useState<string | null>(null);
   const [patientName, setPatientName] = useState('');
   const [loading, setLoading] = useState(true);
+  const [fetchError, setFetchError] = useState<string | null>(null);
   const [selectedForOptions, setSelectedForOptions] = useState<MenuItem | null>(null);
   const [currentOption, setCurrentOption] = useState<MenuOption | null>(null);
   const [quantity, setQuantity] = useState(1);
