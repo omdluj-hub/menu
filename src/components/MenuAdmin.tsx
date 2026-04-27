@@ -87,7 +87,7 @@ const MenuAdmin = () => {
     const fileName = `${Date.now()}-${file.name}`;
     
     try {
-      const { data, error } = await supabase.storage
+      const { error } = await supabase.storage
         .from('menu-images')
         .upload(fileName, file);
 
