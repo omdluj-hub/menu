@@ -50,6 +50,7 @@ const PatientMenu = () => {
       const { data, error } = await supabase
         .from('menu_items')
         .select('*')
+        .order('sort_order', { ascending: true })
         .order('id', { ascending: true });
 
       if (error) throw error;
