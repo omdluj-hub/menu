@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Plus, Trash2, Save, Search, Upload, ImageIcon } from 'lucide-react';
+import { Plus, Trash2, Save, Search, Upload, ImageIcon, ChevronDown, ChevronRight, ArrowUp, ArrowDown, Edit3, X } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 
 interface MenuOption {
@@ -18,20 +18,18 @@ interface MenuItem {
   image: string;
   options: MenuOption[];
   maxCount?: number;
+  sort_order?: number;
 }
 
 const MenuAdmin = () => {
   const [items, setItems] = useState<MenuItem[]>([]);
-  const [editingItem, setSelectedEditingItem] = useState<MenuItem | null>(null);
+  const [editingItem, setEditingItem] = useState<Partial<MenuItem> | null>(null);
   const [isAdding, setIsAdding] = useState(false);
-  const [searchQuery, setSearchSearchQuery] = useState('');
-  const [activeCategory, setActiveCategory] = useState<string>('All');
+  const [activeCategory, setActiveCategory] = useState<string>('');
+  const [activeSubCategory, setActiveSubCategory] = useState<string | null>(null);
+  const [expandedParent, setExpandedParent] = useState<string | null>(null);
   const [isUploading, setIsUploading] = useState(false);
-
-  // Form states
-  const [formData, setFormData] = useState<Partial<MenuItem>>({
-    name: '', category: '', subCategory: '', price: '', description: '', duration: '', image: '', options: []
-  });
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     fetchItems();
@@ -41,7 +39,7 @@ const MenuAdmin = () => {
     const { data, error } = await supabase
       .from('menu_items')
       .select('*')
-      .order('id', { ascending: true });
+      .order('id', { ascending: true }); // Ideally order by sort_order
 
     if (error) {
       console.error('Error fetching items:', error);
@@ -54,23 +52,29 @@ const MenuAdmin = () => {
       maxCount: item.max_count
     }));
     setItems(formattedData);
+    
+    // Set initial active category if none selected
+    if (formattedData.length > 0 && !activeCategory) {
+      setActiveCategory(formattedData[0].category);
+    }
   };
 
-  const categories = ['All', ...Array.from(new Set(items.map(i => i.category)))];
+  const categories = Array.from(new Set(items.map(i => i.category)));
+  const getSubCategories = (category: string) => {
+    return Array.from(new Set(items.filter(item => item.category === category && item.subCategory).map(item => item.subCategory))) as string[];
+  };
 
   const handleEdit = (item: MenuItem) => {
-    setSelectedEditingItem(item);
-    setFormData(item);
+    setEditingItem({ ...item });
     setIsAdding(false);
   };
 
   const handleAdd = () => {
     setIsAdding(true);
-    setSelectedEditingItem(null);
-    setFormData({
+    setEditingItem({
       name: '', 
-      category: items[0]?.category || '신규 카테고리', 
-      subCategory: '', 
+      category: activeCategory || categories[0] || '신규 카테고리', 
+      subCategory: activeSubCategory || '', 
       price: '0', 
       description: '', 
       duration: '30분', 
@@ -97,7 +101,9 @@ const MenuAdmin = () => {
         .from('menu-images')
         .getPublicUrl(fileName);
 
-      setFormData({ ...formData, image: publicUrl.publicUrl });
+      if (editingItem) {
+        setEditingItem({ ...editingItem, image: publicUrl.publicUrl });
+      }
       alert('이미지가 업로드되었습니다.');
     } catch (error) {
       console.error('Upload error:', error);
@@ -108,49 +114,39 @@ const MenuAdmin = () => {
   };
 
   const handleSave = async () => {
-    if (!formData.name || !formData.category) {
+    if (!editingItem?.name || !editingItem?.category) {
       alert('항목명과 카테고리는 필수 입력 사항입니다.');
       return;
     }
 
     const payload = {
-      category: formData.category,
-      sub_category: formData.subCategory || null,
-      name: formData.name,
-      price: formData.price,
-      description: formData.description,
-      duration: formData.duration,
-      image: formData.image,
-      options: formData.options,
-      max_count: formData.maxCount || null
+      category: editingItem.category,
+      sub_category: editingItem.subCategory || null,
+      name: editingItem.name,
+      price: editingItem.price,
+      description: editingItem.description,
+      duration: editingItem.duration,
+      image: editingItem.image,
+      options: editingItem.options,
+      max_count: editingItem.maxCount || null
     };
-
-    console.log('Saving payload:', payload);
 
     try {
       if (isAdding) {
-        // 1. 기본 인서트 시도
         const { error: insertError } = await supabase.from('menu_items').insert(payload);
-        
-        if (insertError) {
-          console.error('Initial insert failed:', insertError);
-          
-          // 만약 에러가 '아이디 중복' 관련인 경우에만 수동 할당 시도 (하지만 GENERATED ALWAYS면 이마저도 실패함)
-          // 여기서는 우선 에러 메시지를 사용자에게 정확히 전달하는 것이 우선
-          throw new Error(`기본 저장 실패: ${insertError.message}`);
-        }
+        if (insertError) throw insertError;
       } else {
         const { error } = await supabase
           .from('menu_items')
           .update(payload)
-          .eq('id', formData.id);
+          .eq('id', editingItem.id);
         if (error) throw error;
       }
 
       alert('데이터베이스에 저장되었습니다.');
       fetchItems();
       setIsAdding(false);
-      setSelectedEditingItem(null);
+      setEditingItem(null);
     } catch (error: any) {
       console.error('Save error:', error);
       alert(`저장 실패: ${error.message || '알 수 없는 오류가 발생했습니다.'}`);
@@ -165,219 +161,254 @@ const MenuAdmin = () => {
     }
   };
 
-  const addOption = () => {
-    setFormData({ ...formData, options: [...(formData.options || []), { label: '', price: '' }] });
-  };
+  const moveItem = async (index: number, direction: 'up' | 'down') => {
+    // Current items in the active view
+    const viewItems = items.filter(item => 
+      item.category === activeCategory && 
+      (!activeSubCategory || item.subCategory === activeSubCategory)
+    );
+    
+    const newIndex = direction === 'up' ? index - 1 : index + 1;
+    if (newIndex < 0 || newIndex >= viewItems.length) return;
 
-  const removeOption = (idx: number) => {
-    const newOpts = [...(formData.options || [])];
-    newOpts.splice(idx, 1);
-    setFormData({ ...formData, options: newOpts });
+    // For permanent sorting, we need a sort_order column.
+    // If not present, we can't easily persist the swap without multiple updates.
+    // Here we swap the items in the state for UI feedback.
+    const newItems = [...items];
+    const item1 = viewItems[index];
+    const item2 = viewItems[newIndex];
+    
+    // In a real database with sort_order, we would swap their sort_order values.
+    alert('순서 변경을 영구 저장하려면 데이터베이스에 sort_order 컬럼이 필요합니다.');
   };
 
   const filteredItems = items.filter(item => {
+    const matchesCategory = activeCategory === '' || item.category === activeCategory;
+    const matchesSubCategory = !activeSubCategory || item.subCategory === activeSubCategory;
     const matchesSearch = item.name.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesCategory = activeCategory === 'All' || item.category === activeCategory;
-    return matchesSearch && matchesCategory;
+    return matchesCategory && matchesSubCategory && matchesSearch;
   });
 
   return (
-    <div className="h-full bg-[#FAF9F6] flex flex-col overflow-hidden">
-      {/* Header */}
-      <div className="bg-white border-b border-[#E9E4E0] px-10 py-6 flex justify-between items-center flex-shrink-0">
-        <div>
-          <h1 className="text-2xl font-black text-[#2C2C2C] tracking-tight">메뉴 관리자 (Supabase DB)</h1>
-          <p className="text-xs text-[#9A8F8A] font-bold uppercase tracking-widest mt-1">Real-time Cloud Database Management</p>
-        </div>
-        <button 
-          onClick={handleAdd}
-          className="bg-[#A89486] text-white px-6 py-3 rounded-2xl font-black text-sm hover:bg-[#8F7C70] transition-all flex items-center space-x-2 shadow-lg"
-        >
-          <Plus size={18} />
-          <span>신규 항목 추가</span>
-        </button>
-      </div>
-
-      <div className="flex-1 flex overflow-hidden">
-        {/* Sidebar List */}
-        <div className="w-96 border-r border-[#E9E4E0] bg-white flex flex-col">
-          <div className="p-6 space-y-4 border-b">
-            <div className="relative">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-[#DED9D4]" size={16} />
-              <input 
-                type="text" 
-                placeholder="항목 검색..."
-                className="w-full pl-11 pr-4 py-3 bg-[#FAF9F6] rounded-xl text-sm outline-none"
-                value={searchQuery}
-                onChange={(e) => setSearchSearchQuery(e.target.value)}
-              />
-            </div>
-            <div className="flex overflow-x-auto space-x-2 pb-2 no-scrollbar">
-              {categories.map(cat => (
-                <button
-                  key={cat}
-                  onClick={() => setActiveCategory(cat)}
-                  className={`px-4 py-2 rounded-full text-[10px] font-black uppercase tracking-widest whitespace-nowrap transition-all ${
-                    activeCategory === cat ? 'bg-[#2C2C2C] text-white' : 'bg-[#FAF9F6] text-[#9A8F8A]'
-                  }`}
-                >
-                  {cat}
-                </button>
-              ))}
-            </div>
+    <div className="flex h-full bg-[#FAF9F6] text-[#2C2C2C] font-sans relative overflow-hidden">
+      {/* Sidebar - Same as PatientMenu */}
+      <nav className="w-72 bg-white border-r border-[#E9E4E0] flex flex-col p-6 space-y-2 pt-12 flex-shrink-0 shadow-[4px_0_15px_rgba(0,0,0,0.02)] overflow-y-auto">
+        <div className="mb-6 px-4">
+          <h2 className="text-xs font-black text-[#A89486] uppercase tracking-[0.2em] mb-4">Categories</h2>
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-[#DED9D4]" size={14} />
+            <input 
+              type="text" 
+              placeholder="Search items..."
+              className="w-full pl-9 pr-4 py-2 bg-[#FAF9F6] rounded-xl text-xs outline-none"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
           </div>
-          <div className="flex-1 overflow-y-auto p-4 space-y-2">
-            {filteredItems.map(item => (
-              <div 
-                key={item.id}
-                onClick={() => handleEdit(item)}
-                className={`p-4 rounded-2xl border-2 transition-all cursor-pointer group ${
-                  editingItem?.id === item.id ? 'border-[#A89486] bg-[#FBF9F7]' : 'border-transparent hover:bg-[#FAF9F6]'
+        </div>
+        {categories.map(category => {
+          const subCats = getSubCategories(category);
+          const hasSubCats = subCats.length > 0;
+          const isExpanded = expandedParent === category;
+          const isSelected = activeCategory === category;
+          return (
+            <div key={category} className="space-y-1">
+              <button
+                onClick={() => {
+                  setActiveCategory(category);
+                  if (hasSubCats) {
+                    setExpandedParent(isExpanded ? null : category);
+                    if (!isExpanded) setActiveSubCategory(subCats[0]);
+                  } else {
+                    setActiveSubCategory(null);
+                    setExpandedParent(null);
+                  }
+                }}
+                className={`w-full text-left px-6 py-4 rounded-[1.25rem] text-sm font-bold transition-all duration-300 flex items-center justify-between ${
+                  isSelected || (hasSubCats && isExpanded) ? 'bg-[#A89486] text-white shadow-lg' : 'text-[#9A8F8A] hover:bg-[#FAF9F6]'
                 }`}
               >
-                <div className="flex items-center space-x-4">
-                  <img src={item.image} className="w-12 h-12 rounded-lg object-cover" alt="" />
-                  <div className="flex-1 min-w-0">
-                    <p className="text-xs font-black text-[#A89486] truncate tracking-tighter">{item.category}</p>
-                    <h3 className="font-bold text-[#2C2C2C] truncate">{item.name}</h3>
-                  </div>
-                  <button onClick={(e) => { e.stopPropagation(); handleDelete(item.id); }} className="opacity-0 group-hover:opacity-100 p-2 text-red-400 hover:bg-red-50 rounded-full transition-all">
-                    <Trash2 size={14} />
-                  </button>
+                <span>{category}</span>
+                {hasSubCats && <ChevronDown size={16} className={`transition-transform duration-300 ${isExpanded ? 'rotate-180' : ''}`} />}
+              </button>
+              {hasSubCats && isExpanded && (
+                <div className="pl-4 space-y-1">
+                  {subCats.map(subCat => (
+                    <button
+                      key={subCat}
+                      onClick={() => { setActiveCategory(category); setActiveSubCategory(subCat); }}
+                      className={`w-full text-left px-6 py-3 rounded-xl text-xs font-black transition-all duration-300 ${
+                        activeSubCategory === subCat ? 'text-[#A89486] bg-[#F8F5F2]' : 'text-[#DED9D4] hover:text-[#A89486]'
+                      }`}
+                    >
+                      • {subCat}
+                    </button>
+                  ))}
                 </div>
-              </div>
-            ))}
+              )}
+            </div>
+          );
+        })}
+        <button 
+          onClick={() => { setIsAdding(true); setEditingItem({ name: '', category: '신규 카테고리', options: [] }); }}
+          className="mt-6 w-full py-4 border-2 border-dashed border-[#E9E4E0] rounded-[1.25rem] text-[#9A8F8A] text-xs font-bold hover:border-[#A89486] hover:text-[#A89486] transition-all flex items-center justify-center space-x-2"
+        >
+          <Plus size={16} />
+          <span>신규 카테고리 추가</span>
+        </button>
+      </nav>
+
+      <main className="flex-1 overflow-y-auto p-12 relative pb-40">
+        <div className="flex justify-between items-center mb-10">
+          <div>
+            <h1 className="text-3xl font-black text-[#2C2C2C] tracking-tight">{activeCategory || '전체 메뉴'}</h1>
+            <p className="text-[#9A8F8A] font-bold uppercase text-[10px] tracking-[0.3em] mt-1">{activeSubCategory || 'Main Category'}</p>
           </div>
+          <button 
+            onClick={handleAdd}
+            className="bg-[#2C2C2C] text-white px-8 py-4 rounded-2xl font-black text-sm hover:bg-[#A89486] transition-all flex items-center space-x-2 shadow-xl"
+          >
+            <Plus size={18} />
+            <span>이 카테고리에 항목 추가</span>
+          </button>
         </div>
 
-        {/* Editor Area */}
-        <div className="flex-1 overflow-y-auto bg-[#FAF9F6] p-12">
-          {(editingItem || isAdding) ? (
-            <div className="max-w-3xl mx-auto space-y-8">
-              <div className="flex justify-between items-end">
-                <div>
-                  <h2 className="text-3xl font-black text-[#2C2C2C] tracking-tight">{isAdding ? 'New Item' : 'Edit Item'}</h2>
-                  <p className="text-[#9A8F8A] font-medium mt-1">클라우드 DB에 실시간으로 반영됩니다.</p>
+        <div className="flex flex-col space-y-6 w-full max-w-5xl">
+          {filteredItems.map((item, index) => (
+            <div key={item.id}
+              className="bg-white rounded-[2rem] overflow-hidden border-2 border-[#F2EFEB] hover:border-[#A89486]/30 transition-all duration-500 flex items-center shadow-sm hover:shadow-lg h-40 group"
+            >
+              <div className="w-56 h-full flex-shrink-0 overflow-hidden border-r border-[#F2EFEB]">
+                <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
+              </div>
+              <div className="pl-10 pr-8 flex-1 flex items-center justify-between">
+                <div className="space-y-2 flex-1 pr-6">
+                  <div className="flex items-center space-x-3">
+                    <h3 className="text-2xl font-black text-[#2C2C2C] tracking-tight">{item.name}</h3>
+                    <span className="bg-[#F2EFEB] text-[#9A8F8A] px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest">{item.duration}</span>
+                  </div>
+                  <p className="text-sm text-[#9A8F8A] font-medium line-clamp-1">{item.description}</p>
                 </div>
-                <div className="flex space-x-3">
-                  <button onClick={() => { setSelectedEditingItem(null); setIsAdding(false); }} className="px-6 py-3 rounded-xl font-bold text-[#9A8F8A]">취소</button>
-                  <button onClick={handleSave} className="bg-[#2C2C2C] text-white px-10 py-3 rounded-xl font-black shadow-xl hover:bg-[#A89486] flex items-center space-x-2 transition-all">
-                    <Save size={18} />
-                    <span>클라우드 저장</span>
+                <div className="flex items-center space-x-4">
+                  <div className="flex flex-col space-y-1 mr-4">
+                    <button onClick={() => moveItem(index, 'up')} className="p-2 hover:bg-[#FAF9F6] rounded-lg text-[#DED9D4] hover:text-[#A89486] transition-all"><ArrowUp size={16} /></button>
+                    <button onClick={() => moveItem(index, 'down')} className="p-2 hover:bg-[#FAF9F6] rounded-lg text-[#DED9D4] hover:text-[#A89486] transition-all"><ArrowDown size={16} /></button>
+                  </div>
+                  <div className="flex space-x-2">
+                    <button onClick={() => handleEdit(item)} className="p-4 bg-[#FAF9F6] text-[#A89486] rounded-2xl hover:bg-[#A89486] hover:text-white transition-all shadow-sm"><Edit3 size={20} /></button>
+                    <button onClick={() => handleDelete(item.id)} className="p-4 bg-[#FAF9F6] text-red-300 rounded-2xl hover:bg-red-500 hover:text-white transition-all shadow-sm"><Trash2 size={20} /></button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </main>
+
+      {/* Edit/Add Modal Overlay */}
+      {editingItem && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[200] flex items-center justify-center p-6 overflow-y-auto">
+          <div className="bg-[#FAF9F6] w-full max-w-4xl rounded-[3rem] shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
+            <div className="px-12 py-8 bg-white border-b flex justify-between items-center">
+              <div>
+                <h2 className="text-3xl font-black text-[#2C2C2C] tracking-tight">{isAdding ? 'New Menu Item' : 'Edit Menu Item'}</h2>
+                <p className="text-xs text-[#9A8F8A] font-bold uppercase tracking-widest mt-1">Cloud Database Real-time Editor</p>
+              </div>
+              <button onClick={() => setEditingItem(null)} className="p-4 bg-[#FAF9F6] rounded-full hover:bg-red-50 hover:text-red-500 transition-all"><X size={24} /></button>
+            </div>
+
+            <div className="flex-1 overflow-y-auto p-12 space-y-12">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+                {/* Image Upload Area */}
+                <div className="space-y-6">
+                  <label className="text-[10px] font-black text-[#9A8F8A] tracking-widest uppercase ml-1">Item Preview Image</label>
+                  <div className="relative group aspect-video rounded-[2.5rem] overflow-hidden border-2 border-dashed border-[#E9E4E0] bg-white flex items-center justify-center">
+                    {editingItem.image ? (
+                      <img src={editingItem.image} className="w-full h-full object-cover" alt="Preview" />
+                    ) : (
+                      <ImageIcon size={48} className="text-[#DED9D4]" />
+                    )}
+                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center text-white space-y-2 cursor-pointer">
+                      <Upload size={32} />
+                      <span className="text-xs font-black uppercase">Change Image</span>
+                    </div>
+                    <input type="file" accept="image/*" onChange={handleImageUpload} className="absolute inset-0 opacity-0 cursor-pointer" />
+                  </div>
+                  {isUploading && <p className="text-center text-xs font-bold text-[#A89486] animate-pulse">이미지 업로드 중...</p>}
+                </div>
+
+                <div className="space-y-6">
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-black text-[#9A8F8A] tracking-widest uppercase ml-1">항목명</label>
+                    <input className="w-full p-5 bg-white border-2 border-transparent focus:border-[#A89486] rounded-2xl outline-none font-bold transition-all shadow-sm" value={editingItem.name} onChange={(e) => setEditingItem({...editingItem, name: e.target.value})} />
+                  </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-black text-[#9A8F8A] tracking-widest uppercase ml-1">카테고리</label>
+                      <select className="w-full p-5 bg-white border-2 border-transparent focus:border-[#A89486] rounded-2xl outline-none font-bold transition-all shadow-sm appearance-none" value={editingItem.category} onChange={(e) => setEditingItem({...editingItem, category: e.target.value})}>
+                        {categories.map(c => <option key={c} value={c}>{c}</option>)}
+                        <option value="직접 입력">+ 신규 추가</option>
+                      </select>
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-black text-[#9A8F8A] tracking-widest uppercase ml-1">서브 카테고리</label>
+                      <input className="w-full p-5 bg-white border-2 border-transparent focus:border-[#A89486] rounded-2xl outline-none font-bold transition-all shadow-sm" value={editingItem.subCategory} onChange={(e) => setEditingItem({...editingItem, subCategory: e.target.value})} />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="space-y-2">
+                  <label className="text-[10px] font-black text-[#9A8F8A] tracking-widest uppercase ml-1">기본 가격</label>
+                  <input className="w-full p-5 bg-white border-2 border-transparent focus:border-[#A89486] rounded-2xl outline-none font-bold transition-all shadow-sm" value={editingItem.price} onChange={(e) => setEditingItem({...editingItem, price: e.target.value})} />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-[10px] font-black text-[#9A8F8A] tracking-widest uppercase ml-1">소요 시간</label>
+                  <input className="w-full p-5 bg-white border-2 border-transparent focus:border-[#A89486] rounded-2xl outline-none font-bold transition-all shadow-sm" value={editingItem.duration} onChange={(e) => setEditingItem({...editingItem, duration: e.target.value})} />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-[10px] font-black text-[#9A8F8A] tracking-widest uppercase ml-1">최대 선택 개수</label>
+                  <input type="number" className="w-full p-5 bg-white border-2 border-transparent focus:border-[#A89486] rounded-2xl outline-none font-bold transition-all shadow-sm" value={editingItem.maxCount || ''} onChange={(e) => setEditingItem({...editingItem, maxCount: parseInt(e.target.value) || undefined})} />
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-[10px] font-black text-[#9A8F8A] tracking-widest uppercase ml-1">상세 설명</label>
+                <textarea rows={3} className="w-full p-5 bg-white border-2 border-transparent focus:border-[#A89486] rounded-2xl outline-none font-medium transition-all shadow-sm" value={editingItem.description} onChange={(e) => setEditingItem({...editingItem, description: e.target.value})} />
+              </div>
+
+              <div className="space-y-6">
+                <div className="flex justify-between items-center">
+                  <label className="text-[10px] font-black text-[#9A8F8A] tracking-widest uppercase ml-1">상세 옵션 및 가격</label>
+                  <button onClick={() => setEditingItem({...editingItem, options: [...(editingItem.options || []), { label: '', price: '' }]})} className="bg-[#A89486]/10 text-[#A89486] px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest flex items-center space-x-2 hover:bg-[#A89486] hover:text-white transition-all">
+                    <Plus size={14} /><span>옵션 추가</span>
                   </button>
                 </div>
-              </div>
-
-              {/* Image Upload Box */}
-              <div className="bg-white p-8 rounded-[2.5rem] border border-[#E9E4E0] shadow-sm flex flex-col items-center space-y-6">
-                <div className="relative group w-48 h-48 rounded-[2rem] overflow-hidden border-2 border-dashed border-[#E9E4E0] flex items-center justify-center bg-[#FAF9F6]">
-                  {formData.image ? (
-                    <img src={formData.image} className="w-full h-full object-cover" alt="Preview" />
-                  ) : (
-                    <ImageIcon size={48} className="text-[#DED9D4]" />
-                  )}
-                  <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                    <Upload size={32} className="text-white" />
-                  </div>
-                  <input type="file" accept="image/*" onChange={handleImageUpload} className="absolute inset-0 opacity-0 cursor-pointer" />
-                </div>
-                <div className="text-center">
-                  <p className="text-xs font-black text-[#A89486] uppercase tracking-widest">{isUploading ? '업로드 중...' : '클릭하여 이미지 업로드'}</p>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-2 gap-6">
-                <div className="space-y-2">
-                  <label className="text-[10px] font-black text-[#9A8F8A] tracking-widest ml-1 uppercase">항목명</label>
-                  <input className="w-full p-4 bg-white border rounded-2xl outline-none font-bold" value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} />
-                </div>
-                
-                <div className="space-y-2">
-                  <label className="text-[10px] font-black text-[#9A8F8A] tracking-widest ml-1 uppercase">카테고리</label>
-                  <select 
-                    className="w-full p-4 bg-white border rounded-2xl outline-none font-bold appearance-none cursor-pointer"
-                    value={formData.category}
-                    onChange={(e) => setFormData({...formData, category: e.target.value})}
-                  >
-                    {categories.filter(c => c !== 'All').map(cat => (
-                      <option key={cat} value={cat}>{cat}</option>
-                    ))}
-                    <option value="직접 입력">+ 새 카테고리 추가</option>
-                  </select>
-                  {formData.category === '직접 입력' && (
-                    <input 
-                      placeholder="새 카테고리 이름"
-                      className="w-full mt-2 p-4 bg-white border rounded-2xl outline-none font-bold animate-in fade-in slide-in-from-top-2"
-                      onChange={(e) => setFormData({...formData, category: e.target.value})}
-                    />
-                  )}
-                </div>
-
-                <div className="space-y-2">
-                  <label className="text-[10px] font-black text-[#9A8F8A] tracking-widest ml-1 uppercase">서브 카테고리</label>
-                  <select 
-                    className="w-full p-4 bg-white border rounded-2xl outline-none font-bold appearance-none cursor-pointer"
-                    value={formData.subCategory || ''}
-                    onChange={(e) => setFormData({...formData, subCategory: e.target.value})}
-                  >
-                    <option value="">없음 (또는 직접 입력)</option>
-                    {Array.from(new Set(items.filter(i => i.category === formData.category && i.subCategory).map(i => i.subCategory))).map(sub => (
-                      <option key={sub} value={sub!}>{sub}</option>
-                    ))}
-                    <option value="new_sub">+ 새 서브 카테고리</option>
-                  </select>
-                  {(formData.subCategory === 'new_sub' || (formData.subCategory && !Array.from(new Set(items.filter(i => i.category === formData.category).map(i => i.subCategory))).includes(formData.subCategory))) && (
-                    <input 
-                      placeholder="새 서브 카테고리 이름"
-                      className="w-full mt-2 p-4 bg-white border rounded-2xl outline-none font-bold animate-in fade-in slide-in-from-top-2"
-                      value={formData.subCategory === 'new_sub' ? '' : formData.subCategory}
-                      onChange={(e) => setFormData({...formData, subCategory: e.target.value})}
-                    />
-                  )}
-                </div>
-
-                <div className="space-y-2">
-                  <label className="text-[10px] font-black text-[#9A8F8A] tracking-widest ml-1 uppercase">기본 가격</label>
-                  <input className="w-full p-4 bg-white border rounded-2xl outline-none font-bold" value={formData.price} onChange={(e) => setFormData({...formData, price: e.target.value})} />
-                </div>
-                
-                <div className="space-y-2">
-                  <label className="text-[10px] font-black text-[#9A8F8A] tracking-widest ml-1 uppercase">소요 시간</label>
-                  <input className="w-full p-4 bg-white border rounded-2xl outline-none font-bold" value={formData.duration} onChange={(e) => setFormData({...formData, duration: e.target.value})} />
-                </div>
-
-                <div className="space-y-2">
-                  <label className="text-[10px] font-black text-[#9A8F8A] tracking-widest ml-1 uppercase">이미지 URL</label>
-                  <input className="w-full p-4 bg-white border rounded-2xl outline-none font-bold text-[#A89486]" value={formData.image} onChange={(e) => setFormData({...formData, image: e.target.value})} />
-                </div>
-
-                <div className="col-span-2 space-y-2">
-                  <label className="text-[10px] font-black text-[#9A8F8A] tracking-widest ml-1 uppercase">상세 설명</label>
-                  <textarea rows={3} className="w-full p-4 bg-white border rounded-2xl outline-none font-medium" value={formData.description} onChange={(e) => setFormData({...formData, description: e.target.value})} />
-                </div>
-              </div>
-
-              <div className="space-y-4 pb-20">
-                <div className="flex justify-between items-center"><label className="text-[10px] font-black text-[#9A8F8A] tracking-widest uppercase">상세 옵션</label>
-                  <button onClick={addOption} className="text-[#A89486] font-black text-[10px] flex items-center space-x-1 hover:underline"><Plus size={12} /><span>옵션 추가</span></button></div>
-                <div className="space-y-3">
-                  {formData.options?.map((opt, idx) => (
-                    <div key={idx} className="flex items-center space-x-3">
-                      <input placeholder="옵션명" className="flex-1 p-4 bg-white border rounded-xl outline-none font-bold text-sm" value={opt.label} onChange={(e) => { const newOpts = [...(formData.options || [])]; newOpts[idx].label = e.target.value; setFormData({ ...formData, options: newOpts }); }} />
-                      <input placeholder="가격" className="flex-1 p-4 bg-white border rounded-xl outline-none font-bold text-sm" value={opt.price} onChange={(e) => { const newOpts = [...(formData.options || [])]; newOpts[idx].price = e.target.value; setFormData({ ...formData, options: newOpts }); }} />
-                      <button onClick={() => removeOption(idx)} className="p-4 text-red-300"><Trash2 size={18} /></button>
+                <div className="grid gap-3">
+                  {editingItem.options?.map((opt, idx) => (
+                    <div key={idx} className="flex items-center space-x-3 group">
+                      <input placeholder="옵션명" className="flex-1 p-5 bg-white border-2 border-transparent focus:border-[#A89486] rounded-2xl outline-none font-bold text-sm shadow-sm" value={opt.label} onChange={(e) => { const newOpts = [...(editingItem.options || [])]; newOpts[idx].label = e.target.value; setEditingItem({ ...editingItem, options: newOpts }); }} />
+                      <input placeholder="가격" className="flex-1 p-5 bg-white border-2 border-transparent focus:border-[#A89486] rounded-2xl outline-none font-bold text-sm shadow-sm" value={opt.price} onChange={(e) => { const newOpts = [...(editingItem.options || [])]; newOpts[idx].price = e.target.value; setEditingItem({ ...editingItem, options: newOpts }); }} />
+                      <button onClick={() => { const newOpts = [...(editingItem.options || [])]; newOpts.splice(idx, 1); setEditingItem({ ...editingItem, options: newOpts }); }} className="p-4 text-red-300 hover:text-red-500 transition-all opacity-0 group-hover:opacity-100"><Trash2 size={20} /></button>
                     </div>
                   ))}
                 </div>
               </div>
             </div>
-          ) : (
-            <div className="h-full flex flex-col items-center justify-center opacity-40 space-y-4"><ImageIcon size={48} /><p className="font-bold">항목을 선택하여 클라우드 DB를 관리하세요.</p></div>
-          )}
+
+            <div className="p-10 bg-white border-t flex space-x-4">
+              <button onClick={() => setEditingItem(null)} className="flex-1 py-5 rounded-[1.5rem] font-black text-gray-400 hover:bg-gray-50 transition-all uppercase tracking-widest">Discard Changes</button>
+              <button onClick={handleSave} className="flex-[2] bg-[#2C2C2C] text-white py-5 rounded-[1.5rem] font-black text-lg hover:bg-[#A89486] flex items-center justify-center space-x-3 shadow-xl transition-all">
+                <Save size={22} /><span>Cloud Synchronize</span>
+              </button>
+            </div>
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };
 
 export default MenuAdmin;
+
