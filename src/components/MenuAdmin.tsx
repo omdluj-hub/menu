@@ -108,6 +108,11 @@ const MenuAdmin = () => {
   };
 
   const handleSave = async () => {
+    if (!formData.name || !formData.category) {
+      alert('항목명과 카테고리는 필수 입력 사항입니다.');
+      return;
+    }
+
     const payload = {
       category: formData.category,
       sub_category: formData.subCategory || null,
@@ -120,10 +125,34 @@ const MenuAdmin = () => {
       max_count: formData.maxCount || null
     };
 
+    console.log('Saving payload:', payload);
+
     try {
       if (isAdding) {
-        const { error } = await supabase.from('menu_items').insert(payload);
-        if (error) throw error;
+        // 1. 기본 인서트 시도 (시퀀스 자동 생성 기대)
+        const { error: insertError } = await supabase.from('menu_items').insert(payload);
+        
+        if (insertError) {
+          console.warn('Initial insert failed, trying manual ID assignment:', insertError);
+          
+          // 2. 실패 시 (주로 시퀀스 불일치), 최대 ID + 1로 수동 할당 시도
+          const { data: maxIdData, error: fetchError } = await supabase
+            .from('menu_items')
+            .select('id')
+            .order('id', { ascending: false })
+            .limit(1);
+            
+          if (fetchError) throw fetchError;
+          
+          const nextId = (maxIdData && maxIdData.length > 0) ? Math.max(...items.map(i => i.id), maxIdData[0].id) + 1 : 1;
+          console.log('Retrying with ID:', nextId);
+          
+          const { error: retryError } = await supabase
+            .from('menu_items')
+            .insert({ ...payload, id: nextId });
+            
+          if (retryError) throw retryError;
+        }
       } else {
         const { error } = await supabase
           .from('menu_items')
@@ -136,9 +165,9 @@ const MenuAdmin = () => {
       fetchItems();
       setIsAdding(false);
       setSelectedEditingItem(null);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Save error:', error);
-      alert('저장 실패');
+      alert(`저장 실패: ${error.message || '알 수 없는 오류가 발생했습니다.'}`);
     }
   };
 
