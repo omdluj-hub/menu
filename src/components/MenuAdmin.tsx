@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Plus, Trash2, Save, Search, Upload, ImageIcon, ChevronDown, ChevronRight, ArrowUp, ArrowDown, Edit3, X } from 'lucide-react';
+import { Plus, Trash2, Save, Search, Upload, ImageIcon, ChevronDown, ArrowUp, ArrowDown, Edit3, X } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 
 interface MenuOption {
@@ -171,13 +171,6 @@ const MenuAdmin = () => {
     const newIndex = direction === 'up' ? index - 1 : index + 1;
     if (newIndex < 0 || newIndex >= viewItems.length) return;
 
-    // For permanent sorting, we need a sort_order column.
-    // If not present, we can't easily persist the swap without multiple updates.
-    // Here we swap the items in the state for UI feedback.
-    const newItems = [...items];
-    const item1 = viewItems[index];
-    const item2 = viewItems[newIndex];
-    
     // In a real database with sort_order, we would swap their sort_order values.
     alert('순서 변경을 영구 저장하려면 데이터베이스에 sort_order 컬럼이 필요합니다.');
   };
