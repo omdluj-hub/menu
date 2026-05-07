@@ -129,29 +129,15 @@ const MenuAdmin = () => {
 
     try {
       if (isAdding) {
-        // 1. 기본 인서트 시도 (시퀀스 자동 생성 기대)
+        // 1. 기본 인서트 시도
         const { error: insertError } = await supabase.from('menu_items').insert(payload);
         
         if (insertError) {
-          console.warn('Initial insert failed, trying manual ID assignment:', insertError);
+          console.error('Initial insert failed:', insertError);
           
-          // 2. 실패 시 (주로 시퀀스 불일치), 최대 ID + 1로 수동 할당 시도
-          const { data: maxIdData, error: fetchError } = await supabase
-            .from('menu_items')
-            .select('id')
-            .order('id', { ascending: false })
-            .limit(1);
-            
-          if (fetchError) throw fetchError;
-          
-          const nextId = (maxIdData && maxIdData.length > 0) ? Math.max(...items.map(i => i.id), maxIdData[0].id) + 1 : 1;
-          console.log('Retrying with ID:', nextId);
-          
-          const { error: retryError } = await supabase
-            .from('menu_items')
-            .insert({ ...payload, id: nextId });
-            
-          if (retryError) throw retryError;
+          // 만약 에러가 '아이디 중복' 관련인 경우에만 수동 할당 시도 (하지만 GENERATED ALWAYS면 이마저도 실패함)
+          // 여기서는 우선 에러 메시지를 사용자에게 정확히 전달하는 것이 우선
+          throw new Error(`기본 저장 실패: ${insertError.message}`);
         }
       } else {
         const { error } = await supabase
