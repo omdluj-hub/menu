@@ -39,7 +39,8 @@ const MenuAdmin = () => {
     const { data, error } = await supabase
       .from('menu_items')
       .select('*')
-      .order('id', { ascending: true }); // Ideally order by sort_order
+      .order('sort_order', { ascending: true })
+      .order('id', { ascending: true });
 
     if (error) {
       console.error('Error fetching items:', error);
@@ -162,7 +163,6 @@ const MenuAdmin = () => {
   };
 
   const moveItem = async (index: number, direction: 'up' | 'down') => {
-    // Current items in the active view
     const viewItems = items.filter(item => 
       item.category === activeCategory && 
       (!activeSubCategory || item.subCategory === activeSubCategory)
@@ -171,8 +171,35 @@ const MenuAdmin = () => {
     const newIndex = direction === 'up' ? index - 1 : index + 1;
     if (newIndex < 0 || newIndex >= viewItems.length) return;
 
-    // In a real database with sort_order, we would swap their sort_order values.
-    alert('순서 변경을 영구 저장하려면 데이터베이스에 sort_order 컬럼이 필요합니다.');
+    const item1 = viewItems[index];
+    const item2 = viewItems[newIndex];
+
+    // Check if sort_order exists (handling both null and undefined)
+    if (item1.sort_order === undefined || item1.sort_order === null || 
+        item2.sort_order === undefined || item2.sort_order === null) {
+      alert('일부 항목에 sort_order 값이 없습니다. 페이지를 새로고침하거나, SQL 에디터에서 UPDATE menu_items SET sort_order = id; 명령어를 실행해주세요.');
+      return;
+    }
+
+    try {
+      // Swap sort_order values
+      const { error: error1 } = await supabase
+        .from('menu_items')
+        .update({ sort_order: item2.sort_order })
+        .eq('id', item1.id);
+      
+      const { error: error2 } = await supabase
+        .from('menu_items')
+        .update({ sort_order: item1.sort_order })
+        .eq('id', item2.id);
+
+      if (error1 || error2) throw (error1 || error2);
+
+      fetchItems();
+    } catch (error: any) {
+      console.error('Move error:', error);
+      alert('순서 변경 실패');
+    }
   };
 
   const filteredItems = items.filter(item => {
