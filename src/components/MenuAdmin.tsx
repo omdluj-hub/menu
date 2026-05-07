@@ -287,20 +287,74 @@ const MenuAdmin = () => {
               </div>
 
               <div className="grid grid-cols-2 gap-6">
-                <div className="space-y-2"><label className="text-[10px] font-black text-[#9A8F8A] tracking-widest ml-1 uppercase">항목명</label>
-                  <input className="w-full p-4 bg-white border rounded-2xl outline-none font-bold" value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} /></div>
-                <div className="space-y-2"><label className="text-[10px] font-black text-[#9A8F8A] tracking-widest ml-1 uppercase">카테고리</label>
-                  <input className="w-full p-4 bg-white border rounded-2xl outline-none font-bold" value={formData.category} onChange={(e) => setFormData({...formData, category: e.target.value})} /></div>
-                <div className="space-y-2"><label className="text-[10px] font-black text-[#9A8F8A] tracking-widest ml-1 uppercase">서브 카테고리</label>
-                  <input className="w-full p-4 bg-white border rounded-2xl outline-none font-bold" value={formData.subCategory} onChange={(e) => setFormData({...formData, subCategory: e.target.value})} /></div>
-                <div className="space-y-2"><label className="text-[10px] font-black text-[#9A8F8A] tracking-widest ml-1 uppercase">기본 가격</label>
-                  <input className="w-full p-4 bg-white border rounded-2xl outline-none font-bold" value={formData.price} onChange={(e) => setFormData({...formData, price: e.target.value})} /></div>
-                <div className="space-y-2"><label className="text-[10px] font-black text-[#9A8F8A] tracking-widest ml-1 uppercase">소요 시간</label>
-                  <input className="w-full p-4 bg-white border rounded-2xl outline-none font-bold" value={formData.duration} onChange={(e) => setFormData({...formData, duration: e.target.value})} /></div>
-                <div className="space-y-2"><label className="text-[10px] font-black text-[#9A8F8A] tracking-widest ml-1 uppercase">이미지 URL</label>
-                  <input className="w-full p-4 bg-white border rounded-2xl outline-none font-bold text-[#A89486]" value={formData.image} onChange={(e) => setFormData({...formData, image: e.target.value})} /></div>
-                <div className="col-span-2 space-y-2"><label className="text-[10px] font-black text-[#9A8F8A] tracking-widest ml-1 uppercase">상세 설명</label>
-                  <textarea rows={3} className="w-full p-4 bg-white border rounded-2xl outline-none font-medium" value={formData.description} onChange={(e) => setFormData({...formData, description: e.target.value})} /></div>
+                <div className="space-y-2">
+                  <label className="text-[10px] font-black text-[#9A8F8A] tracking-widest ml-1 uppercase">항목명</label>
+                  <input className="w-full p-4 bg-white border rounded-2xl outline-none font-bold" value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} />
+                </div>
+                
+                <div className="space-y-2">
+                  <label className="text-[10px] font-black text-[#9A8F8A] tracking-widest ml-1 uppercase">카테고리</label>
+                  <select 
+                    className="w-full p-4 bg-white border rounded-2xl outline-none font-bold appearance-none cursor-pointer"
+                    value={formData.category}
+                    onChange={(e) => setFormData({...formData, category: e.target.value})}
+                  >
+                    {categories.filter(c => c !== 'All').map(cat => (
+                      <option key={cat} value={cat}>{cat}</option>
+                    ))}
+                    <option value="직접 입력">+ 새 카테고리 추가</option>
+                  </select>
+                  {formData.category === '직접 입력' && (
+                    <input 
+                      placeholder="새 카테고리 이름"
+                      className="w-full mt-2 p-4 bg-white border rounded-2xl outline-none font-bold animate-in fade-in slide-in-from-top-2"
+                      onChange={(e) => setFormData({...formData, category: e.target.value})}
+                    />
+                  )}
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-[10px] font-black text-[#9A8F8A] tracking-widest ml-1 uppercase">서브 카테고리</label>
+                  <select 
+                    className="w-full p-4 bg-white border rounded-2xl outline-none font-bold appearance-none cursor-pointer"
+                    value={formData.subCategory || ''}
+                    onChange={(e) => setFormData({...formData, subCategory: e.target.value})}
+                  >
+                    <option value="">없음 (또는 직접 입력)</option>
+                    {Array.from(new Set(items.filter(i => i.category === formData.category && i.subCategory).map(i => i.subCategory))).map(sub => (
+                      <option key={sub} value={sub!}>{sub}</option>
+                    ))}
+                    <option value="new_sub">+ 새 서브 카테고리</option>
+                  </select>
+                  {(formData.subCategory === 'new_sub' || (formData.subCategory && !Array.from(new Set(items.filter(i => i.category === formData.category).map(i => i.subCategory))).includes(formData.subCategory))) && (
+                    <input 
+                      placeholder="새 서브 카테고리 이름"
+                      className="w-full mt-2 p-4 bg-white border rounded-2xl outline-none font-bold animate-in fade-in slide-in-from-top-2"
+                      value={formData.subCategory === 'new_sub' ? '' : formData.subCategory}
+                      onChange={(e) => setFormData({...formData, subCategory: e.target.value})}
+                    />
+                  )}
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-[10px] font-black text-[#9A8F8A] tracking-widest ml-1 uppercase">기본 가격</label>
+                  <input className="w-full p-4 bg-white border rounded-2xl outline-none font-bold" value={formData.price} onChange={(e) => setFormData({...formData, price: e.target.value})} />
+                </div>
+                
+                <div className="space-y-2">
+                  <label className="text-[10px] font-black text-[#9A8F8A] tracking-widest ml-1 uppercase">소요 시간</label>
+                  <input className="w-full p-4 bg-white border rounded-2xl outline-none font-bold" value={formData.duration} onChange={(e) => setFormData({...formData, duration: e.target.value})} />
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-[10px] font-black text-[#9A8F8A] tracking-widest ml-1 uppercase">이미지 URL</label>
+                  <input className="w-full p-4 bg-white border rounded-2xl outline-none font-bold text-[#A89486]" value={formData.image} onChange={(e) => setFormData({...formData, image: e.target.value})} />
+                </div>
+
+                <div className="col-span-2 space-y-2">
+                  <label className="text-[10px] font-black text-[#9A8F8A] tracking-widest ml-1 uppercase">상세 설명</label>
+                  <textarea rows={3} className="w-full p-4 bg-white border rounded-2xl outline-none font-medium" value={formData.description} onChange={(e) => setFormData({...formData, description: e.target.value})} />
+                </div>
               </div>
 
               <div className="space-y-4 pb-20">
